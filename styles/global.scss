@@ -1,0 +1,37 @@
+body {
+  @apply bg-gray-100;
+}
+
+button,
+input,
+textarea {
+  @apply focus:outline-none;
+}
+
+button:disabled {
+  @apply opacity-80;
+}
+
+.header-menu {
+  & > li {
+    & > a {
+      @apply block h-16 flex items-center px-4;
+    }
+    &:hover {
+      & > a {
+        @apply bg-indigo-700;
+      }
+    }
+  }
+
+  .dropdown {
+    .dropdown-menu {
+      @apply absolute bg-indigo-700 top-full right-0 w-60 hidden;
+    }
+    &:hover {
+      .dropdown-menu {
+        @apply block;
+      }
+    }
+  }
+}
