@@ -1,16 +1,27 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import SessionSelector from '../slices/session/selector';
 
 import store, { wrapper } from '../slices/store';
 import '../styles/tailwind.css';
 import '../styles/global.scss';
-import { getUser } from '../slices/session';
-import { useDispatch, useSelector } from 'react-redux';
-import SessionSelector from '../slices/session/selector';
+import { getUser, reset } from '../slices/session';
 
 const TIMEOUT = 1 * 30 * 1000;
 axios.defaults.timeout = TIMEOUT;
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response.status === 401) {
+      store.dispatch(reset());
+    }
+    return Promise.reject(error);
+  }
+);
+
 axios.interceptors.request.use((config) => {
   const {
     session: { accessToken, isAuthenticated },

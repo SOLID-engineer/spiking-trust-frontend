@@ -47,53 +47,51 @@ const Login = () => {
   };
 
   return (
-    <AuthRoute>
-      <Layout>
-        <div className="w-full max-w-6xl mx-auto">
-          <div className="py-8 flex flex-col items-center">
-            <h1 className="text-xl lg:text-3xl font-bold mb-4">
-              Read reviews. Write reviews. Find companies.
-            </h1>
-            <p className="mb-4">Log in or sign up below</p>
-            <div className="w-96 text-center space-y-4">
-              <FacebookLogin
-                appId={process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}
-                autoLoad={false}
-                fields="name,email,picture"
-                callback={responseFacebook}
-                render={(renderProps) => (
-                  <button
-                    type="button"
-                    onClick={renderProps.onClick}
-                    className="py-3 bg-gray-600 text-white w-full font-semibold"
-                  >
-                    Continue with Facebook
-                  </button>
-                )}
-              />
+    <Layout>
+      <div className="w-full max-w-6xl mx-auto">
+        <div className="py-8 flex flex-col items-center">
+          <h1 className="text-xl lg:text-3xl font-bold mb-4">
+            Read reviews. Write reviews. Find companies.
+          </h1>
+          <p className="mb-4">Log in or sign up below</p>
+          <div className="w-96 text-center space-y-4">
+            <FacebookLogin
+              appId={process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}
+              autoLoad={false}
+              fields="name,email,picture"
+              callback={responseFacebook}
+              render={(renderProps) => (
+                <button
+                  type="button"
+                  onClick={renderProps.onClick}
+                  className="py-3 bg-gray-600 text-white w-full font-semibold"
+                >
+                  Continue with Facebook
+                </button>
+              )}
+            />
 
-              <GoogleLogin
-                clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-                render={(renderProps) => (
-                  <button
-                    type="button"
-                    onClick={renderProps.onClick}
-                    disabled={renderProps.disabled}
-                    className="py-3 bg-gray-600 text-white w-full font-semibold"
-                  >
-                    Continue with Google
-                  </button>
-                )}
-                onSuccess={responseGoogle}
-                onFailure={responseGoogle}
-                isSignedIn={false}
-              />
-            </div>
+            <GoogleLogin
+              clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+              render={(renderProps) => (
+                <button
+                  type="button"
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                  className="py-3 bg-gray-600 text-white w-full font-semibold"
+                >
+                  Continue with Google
+                </button>
+              )}
+              onSuccess={responseGoogle}
+              onFailure={responseGoogle}
+              isSignedIn={false}
+            />
           </div>
         </div>
-      </Layout>
-    </AuthRoute>
+      </div>
+    </Layout>
   );
 };
 
-export default Login;
+export default AuthRoute(Login);

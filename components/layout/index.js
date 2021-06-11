@@ -34,8 +34,13 @@ export default function Layout({ children }) {
                   <div className="dropdown-menu">
                     <ul>
                       <li>
+                        <Link href="/business">
+                          <a className="px-6 py-3 block cursor-pointer">My Companies</a>
+                        </Link>
+                      </li>
+                      <li>
                         <a className="px-6 py-3 block cursor-pointer" onClick={handleLogout}>
-                          Log out
+                          Logout
                         </a>
                       </li>
                     </ul>
@@ -43,11 +48,13 @@ export default function Layout({ children }) {
                 </li>
               )}
               {!session.isAuthenticated && (
-                <li>
-                  <Link href="/login">
-                    <a>Login</a>
-                  </Link>
-                </li>
+                <>
+                  <li>
+                    <Link href="/login">
+                      <a>Login</a>
+                    </Link>
+                  </li>
+                </>
               )}
             </ul>
           </div>

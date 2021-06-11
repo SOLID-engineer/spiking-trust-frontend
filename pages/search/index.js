@@ -50,9 +50,7 @@ const Search = ({ results }) => {
       });
       setItems([...items, ...response.data.items]);
       setCurrentPage((prevState) => prevState + 1);
-    } catch (error) {
-      console.log('🚀 ~ file: index.js ~ line 35 ~ getServerSideProps ~ error', error);
-    }
+    } catch (error) {}
   };
 
   return (
