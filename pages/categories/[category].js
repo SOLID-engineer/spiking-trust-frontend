@@ -95,9 +95,22 @@ const Evaluate = ({ category, slug }) => {
                 <span className="font-semibold text-gray-400">Showing 1-20 of 579 results</span>{' '}
                 based on current filters.
               </p>
-              <div>
-                <div className="mb-4">
-                  <a href="/"></a>
+              <div className="my-6">
+                <div className="mb-4 bg-white py-4">
+                  <a href="/">
+                    <div className="flex">
+                      <div className="w-1/4 flex justify-center">
+                        <img
+                          className="w-32"
+                          src="//s3-eu-west-1.amazonaws.com/tpd/logos/5c29129cd9f1f10001db3141/0x0.png"
+                          alt="Tweedle Farms"
+                        />
+                      </div>
+                      <div className="w-3/4">
+                        <h3 className="font-semibold text-lg">Tweedle Farms</h3>
+                      </div>
+                    </div>
+                  </a>
                 </div>
               </div>
             </div>
