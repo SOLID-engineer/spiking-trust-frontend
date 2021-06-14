@@ -170,6 +170,10 @@ const Review = ({ company, data }) => {
               )}
               <div className="bg-white p-4">
                 <div className="mb-2 text-lg font-semibold">Is this your company?</div>
+                <div className="mb-2">
+                  Claim your company to access business tools and start getting closer to your
+                  customers today!
+                </div>
                 <div>
                   <Link href="/claim-company">
                     <a className="px-4 py-2 border bg-indigo-600 text-white border-indigo-600 inline-block">
