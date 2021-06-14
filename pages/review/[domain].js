@@ -14,17 +14,12 @@ dayjs.extend(relativeTime);
 
 export async function getServerSideProps(context) {
   const { domain } = context.params;
-  const { page } = context.query;
+  const { page = 1 } = context.query;
   const props = {};
   try {
-    let response;
-    response = await axios.get(`/companies/${domain}`);
+    let response = await axios.get(`/companies/${domain}`);
     props.company = response.data;
-    response = await axios.get(`/companies/${domain}/reviews`, {
-      params: {
-        page: page || 1,
-      },
-    });
+    response = await axios.get(`/companies/${domain}/reviews`, { params: { page } });
     props.data = response.data;
     if (response.data.items.length === 0 && page !== 1) {
       return {
@@ -74,7 +69,7 @@ const Review = ({ company, data }) => {
   };
 
   return (
-    <Layout key="review">
+    <Layout>
       <div className="bg-white shadow mb-4">
         <div className="w-full max-w-6xl mx-auto">
           <div className="grid grid-cols-3 gap-8 py-6">
@@ -164,7 +159,7 @@ const Review = ({ company, data }) => {
                 </div>
               )}
             </div>
-            <div>
+            <div className="space-y-4">
               {company.description && (
                 <div className="bg-white p-4">
                   <div className="mb-2 text-lg font-semibold">
@@ -173,6 +168,20 @@ const Review = ({ company, data }) => {
                   <div>{company.description}</div>
                 </div>
               )}
+              <div className="bg-white p-4">
+                <div className="mb-2 text-lg font-semibold">Is this your company?</div>
+                <div className="mb-2">
+                  Claim your company to access business tools and start getting closer to your
+                  customers today!
+                </div>
+                <div>
+                  <Link href="/claim-company">
+                    <a className="px-4 py-2 border bg-indigo-600 text-white border-indigo-600 inline-block">
+                      Claim a company
+                    </a>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
