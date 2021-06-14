@@ -20,6 +20,8 @@ export async function getServerSideProps(context) {
     let response = await axios.get(`/companies/${domain}`);
     props.company = response.data;
     response = await axios.get(`/companies/${domain}/reviews`, { params: { page } });
+    console.log('🚀 ~ file: [domain].js ~ line 23 ~ getServerSideProps ~ response', response);
+
     props.data = response.data;
     if (response.data.items.length === 0 && page !== 1) {
       return {
@@ -160,28 +162,55 @@ const Review = ({ company, data }) => {
               )}
             </div>
             <div className="space-y-4">
+              {company.claimed_at !== null && (
+                <div className="bg-white p-4">
+                  <div className="mb-2 text-lg font-semibold">Business Transparency</div>
+                  <div>Claimed their profile: {dayjs(company.claimed_at).format('MMMM YYYY')}</div>
+                </div>
+              )}
+
               {company.description && (
                 <div className="bg-white p-4">
                   <div className="mb-2 text-lg font-semibold">
                     About {company.name || company.domain}
                   </div>
+                  <div className="mb-2">Information written by the company</div>
                   <div>{company.description}</div>
                 </div>
               )}
-              <div className="bg-white p-4">
-                <div className="mb-2 text-lg font-semibold">Is this your company?</div>
-                <div className="mb-2">
-                  Claim your company to access business tools and start getting closer to your
-                  customers today!
+
+              {company.information !== null && (
+                <div className="bg-white p-4">
+                  <div className="mb-2 text-lg font-semibold">Contact</div>
+                  <div className="mb-2 space-y-2">
+                    {company.information.email && <div>{company.information.email}</div>}
+                    {company.information.telephone && <div>{company.information.telephone}</div>}
+                    {company.information.street_address && (
+                      <div>{company.information.street_address}</div>
+                    )}
+                    {company.information.city && <div>{company.information.city}</div>}
+                    {company.information.zip_code && <div>{company.information.zip_code}</div>}
+                    {company.information.country && <div>{company.information.country}</div>}
+                  </div>
                 </div>
-                <div>
-                  <Link href="/claim-company">
-                    <a className="px-4 py-2 border bg-indigo-600 text-white border-indigo-600 inline-block">
-                      Claim a company
-                    </a>
-                  </Link>
+              )}
+
+              {company.claimed_at === null && (
+                <div className="bg-white p-4">
+                  <div className="mb-2 text-lg font-semibold">Is this your company?</div>
+                  <div className="mb-2">
+                    Claim your company to access business tools and start getting closer to your
+                    customers today!
+                  </div>
+                  <div>
+                    <Link href="/claim-company">
+                      <a className="px-4 py-2 border bg-indigo-600 text-white border-indigo-600 inline-block">
+                        Claim a company
+                      </a>
+                    </Link>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

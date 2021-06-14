@@ -6,9 +6,6 @@ const Header = ({ pageTitle, headerBottom = null }) => (
       <h1 className="font-semibold text-lg">{pageTitle}</h1>
       <ul className="flex flex-row items-center space-x-2">
         <li>
-          <a>Notification</a>
-        </li>
-        <li>
           <a>User</a>
         </li>
       </ul>

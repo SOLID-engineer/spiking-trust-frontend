@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 
 import BusinessSelector from 'slices/business/selector';
 import BusinessLayout from 'components/business-layout';
+import Link from 'next/link';
 
 const Settings = () => {
   const currentCompany = useSelector(BusinessSelector.selectCurrentCompany);
@@ -15,10 +16,12 @@ const Settings = () => {
               Profile Settings: <span className="text-gray-500">{currentCompany.domain}</span>
             </h3>
             <div className="grid grid-cols-3 gap-4">
-              <a className="block hover:bg-gray-100 p-2">
-                <div className="font-semibold">Profile Page</div>
-                <div className="text-gray-500">Edit your public details.</div>
-              </a>
+              <Link href="/business/settings/information">
+                <a className="block hover:bg-gray-100 p-2">
+                  <div className="font-semibold">Profile Page</div>
+                  <div className="text-gray-500">Edit your public details.</div>
+                </a>
+              </Link>
               <a className="block hover:bg-gray-100 p-2">
                 <div className="font-semibold">Categories</div>
                 <div className="text-gray-500">Add or change your business categories.</div>

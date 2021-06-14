@@ -18,6 +18,6 @@ const store = configureStore({
 });
 
 const makeStore = wrapMakeStore(() => store);
-export const wrapper = createWrapper(makeStore, { debug: true });
+export const wrapper = createWrapper(makeStore);
 
 export default store;
