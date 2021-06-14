@@ -4,13 +4,13 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import BusinessLayout from '../../../components/business-layout';
-import StarRating from '../../../components/common/StarRating';
-import PrivateRoute from '../../../components/routes/PrivateRoute';
-import BusinessSelector from '../../../slices/business/selector';
 
-import SessionSelector from '../../../slices/session/selector';
-import { wrapper } from '../../../slices/store';
+import BusinessLayout from 'components/business-layout';
+import StarRating from 'components/common/StarRating';
+import PrivateRoute from 'components/routes/PrivateRoute';
+import BusinessSelector from 'slices/business/selector';
+import SessionSelector from 'slices/session/selector';
+import { wrapper } from 'slices/store';
 
 export const getServerSideProps = wrapper.getServerSideProps((store) => async (context) => {
   const session = SessionSelector.getSession(store.getState());

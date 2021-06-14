@@ -1,3 +1,4 @@
+import Dropdown from 'components/common/Dropdown';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,14 +59,35 @@ const BusinessLayout = ({ pageTitle, headerBottom = null, children }) => {
         <div className="fixed z-20 w-60 ">
           <div className="h-14">
             {currentCompany !== null && (
-              <div className="h-14 flex flex-row items-center px-6 font-bold">
-                {currentCompany.domain}
-              </div>
+              <>
+                <Dropdown
+                  button={
+                    <div className="h-14 flex flex-row items-center px-6 font-bold">
+                      {currentCompany.domain}
+                    </div>
+                  }
+                  dropdown={
+                    <div className="absolute w-full inset-x-0 text-gray-800 px-2">
+                      <div className="bg-white p-2 shadow">
+                        {companies !== null &&
+                          companies.map((company) => (
+                            <button
+                              type="button"
+                              key={company.id}
+                              className="px-3 py-2 hover:bg-gray-100 w-full block text-left"
+                              onClick={() => {
+                                dispatch(selectCompany(company));
+                              }}
+                            >
+                              {company.domain}
+                            </button>
+                          ))}
+                      </div>
+                    </div>
+                  }
+                />
+              </>
             )}
-            <div className="hidden">
-              {companies !== null &&
-                companies.map((company) => <div key={company.id}>{company.domain}</div>)}
-            </div>
           </div>
           <ul className="pb-2 mb-2 border-b border-gray-600 space-y-1">
             <li>
@@ -78,14 +100,14 @@ const BusinessLayout = ({ pageTitle, headerBottom = null, children }) => {
                 <a className="px-6 py-2 block font-semibold hover:bg-gray-700">Reviews</a>
               </Link>
             </li>
-            <li>
+            {/* <li>
               <a className="px-6 py-2 block font-semibold hover:bg-gray-700">Get Reviews</a>
-            </li>
+            </li> */}
           </ul>
           <ul className="pb-2 space-y-1">
-            <li>
+            {/* <li>
               <a className="px-6 py-1 block font-semibold text-sm hover:bg-gray-700">Get Started</a>
-            </li>
+            </li> */}
             <li>
               <Link href="/business/settings">
                 <a className="px-6 py-1 block font-semibold text-sm hover:bg-gray-700">Settings</a>
