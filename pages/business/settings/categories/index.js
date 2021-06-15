@@ -32,7 +32,7 @@ const CategoryBusiness = () => {
     axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
     axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
     const response = await axios.delete(`/business/${currentCompany.domain}/categories`, {
-      category: id,
+      data: { category: id },
     });
     await getCatgoryByDomain();
   };
