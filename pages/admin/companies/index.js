@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-
 import AdminLayout from 'components/admin';
 import PrivateRoute from 'components/routes/PrivateRoute';
 import Link from 'next/link';
@@ -23,13 +22,13 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async (c
   return {};
 });
 
-const Business = () => {
-  const [categories, setCategories] = useState([]);
+const CompanyAdmin = () => {
+  const [companies, setCompanies] = useState([]);
 
-  const getCategories = async () => {
-    const response = await axios.get('/admin/categories', {});
+  const getCompanies = async () => {
+    const response = await axios.get('/admin/companies', {});
     const { data = [] } = response;
-    setCategories(data);
+    setCompanies(data.items);
   };
 
   const removeRecord = async (id) => {
@@ -46,13 +45,13 @@ const Business = () => {
   };
 
   useEffect(() => {
-    getCategories();
+    getCompanies();
   }, []);
 
-  console.log('categories', categories);
+  console.log();
 
   return (
-    <AdminLayout pageTitle="Categories">
+    <AdminLayout pageTitle="Companies">
       <div className="w-full sm:px-6">
         <div className="px-4 md:px-10 py-4 md:py-5 bg-gray-100  rounded-tl-md rounded-tr-md">
           <div className="sm:flex items-center justify-between">
@@ -60,53 +59,62 @@ const Business = () => {
               tabIndex={0}
               className="focus:outline-none text-base sm:text-lg md:text-xl lg:text-xl font-bold leading-normal text-gray-800"
             >
-              Projects
+              List companies
             </p>
-            <div>
-              <button className="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 inline-flex sm:ml-3 mt-4 sm:mt-0 items-start justify-start px-6 py-3 bg-indigo-700 hover:bg-indigo-600 focus:outline-none rounded">
-                <Link href="/admin/categories/edit">
-                  <p className="text-sm font-medium leading-none text-white">New category</p>
-                </Link>
-              </button>
-            </div>
           </div>
         </div>
-        <div className="bg-white shadow px-4 md:px-10 pt-4 md:pt-7 pb-5 overflow-y-auto rounded-bl-md rounded-br-md">
+        <div className="bg-white shadow md:px-6 pt-4 md:pt-7 pb-5 overflow-y-auto rounded-bl-md rounded-br-md">
           <table className="w-full whitespace-nowrap">
             <thead>
               <tr className="bg-gray-200 text-gray-600 w-full text-sm leading-none uppercase font-bold">
-                <th className="p-5 text-left">Name</th>
+                <th className="p-5 text-left">Url</th>
+                <th className="p-5 text-left">Claimed At</th>
+                <th className="p-5 text-left">Created At</th>
                 <th className="p-5 text-left">Actions</th>
               </tr>
             </thead>
             <tbody className="w-full">
-              {categories.map((category) => {
+              {companies.map((company) => {
                 return (
                   <tr
-                    key={category.id}
+                    key={company.id}
                     className="h-20 text-sm leading-none text-gray-800 bg-white border-b border-t border-gray-100"
                   >
                     <td className="cursor-pointer">
-                      <div className="flex items-center">
-                        <div className="pl-5">
-                          <p
-                            className={`font-medium pl-${
-                              category.level >= 3 ? '20' : category.level >= 2 ? '10' : ''
-                            }`}
+                      <div className="items-center">
+                        <span className="pl-5 py-3">{company.name}</span>
+                        <p className="pl-5 py-3">
+                          {company.domain} |
+                          <a
+                            className="text-blue-300 px-3"
+                            target="_blank"
+                            href={`https://${company.domain}`}
+                            rel="noreferrer"
                           >
-                            {category.name}
-                          </p>
-                        </div>
+                            View website
+                          </a>
+                        </p>
+                      </div>
+                    </td>
+                    <td className="cursor-pointer">
+                      <div className="items-center">
+                        <p className="pl-5">{company.claimed_at || ' --- '}</p>
+                        <p className="pl-5">{company.claimed_by || ' --- '}</p>
+                      </div>
+                    </td>
+                    <td className="cursor-pointer">
+                      <div className="flex items-center">
+                        <div className="pl-5">{company.created_at}</div>
                       </div>
                     </td>
                     <td>
-                      <div className="flex">
-                        <Link href={`/admin/categories/edit/${category.id}`}>
+                      <div className="flex ml-5">
+                        <Link href={`/admin/categories/edit/${company.id}`}>
                           <p
                             className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6"
                             title="Edit details"
                           >
-                            <span className="text-sm text-gray-300">
+                            <span className="text-sm">
                               <EditIcon />
                             </span>
                           </p>
@@ -114,9 +122,9 @@ const Business = () => {
                         <button
                           className="btn btn-sm btn-clean btn-icon mr-2  h-6 w-6"
                           title="Detele details"
-                          onClick={() => removeRecord(category.id)}
+                          onClick={() => removeRecord(company.id)}
                         >
-                          <span className="text-sm text-gray-300">
+                          <span className="text-sm text-red-400">
                             <TrashIcon />
                           </span>
                         </button>
@@ -132,5 +140,4 @@ const Business = () => {
     </AdminLayout>
   );
 };
-
-export default PrivateRoute(Business);
+export default PrivateRoute(CompanyAdmin);

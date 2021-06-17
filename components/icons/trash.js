@@ -3,26 +3,20 @@ import React from 'react';
 export default function TrashIcon() {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      xmlnsXlink="http://www.w3.org/1999/xlink"
-      width="24px"
-      height="24px"
       viewBox="0 0 24 24"
-      version="1.1"
+      width={24}
+      height={24}
+      stroke="currentColor"
+      strokeWidth={2}
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="css-i6dzq1"
     >
-      <g stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
-        <rect x={0} y={0} width={24} height={24} />
-        <path
-          d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z"
-          fill="#000000"
-          fillRule="nonzero"
-        />
-        <path
-          d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z"
-          fill="#000000"
-          opacity="0.3"
-        />
-      </g>
+      <polyline points="3 6 5 6 21 6" />
+      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+      <line x1={10} y1={11} x2={10} y2={17} />
+      <line x1={14} y1={11} x2={14} y2={17} />
     </svg>
   );
 }

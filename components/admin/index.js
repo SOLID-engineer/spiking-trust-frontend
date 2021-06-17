@@ -47,8 +47,8 @@ const AdminLayout = ({ pageTitle = 'Dashboard', headerBottom = null, children })
                 </span>
               </Link>
             </li>
-            <li>
-              <Link href="/admin/settings">
+            <li className="cursor-pointer">
+              <Link href="/admin/mail-config">
                 <span className="px-6 py-1 block font-semibold text-sm hover:bg-gray-700">
                   Mail Server
                 </span>
