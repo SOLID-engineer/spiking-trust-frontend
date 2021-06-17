@@ -6,7 +6,7 @@ import Layout from '../../components/layout';
 import { wrapper } from '../../slices/store';
 import StarRating from '../../components/common/StarRating';
 
-export const getServerSideProps = wrapper.getServerSideProps((store) => async (context) => {
+export const getServerSideProps = async (context) => {
   const { category } = context.params;
   const props = {};
   props.slug = category;
@@ -22,7 +22,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async (c
     props.companies = companies;
   } catch (error) {}
   return { props };
-});
+};
 
 const Cateogires = ({ category, companies, slug }) => {
   return (

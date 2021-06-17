@@ -1,18 +1,16 @@
+import { getSession } from 'next-auth/client';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import BusinessLayout from '../../components/business-layout';
-import Engage from '../../components/business/dashboard/Engage';
-import Overall from '../../components/business/dashboard/Overall';
-import ReviewStatistics from '../../components/business/dashboard/ReviewStatistics';
-import PrivateRoute from '../../components/routes/PrivateRoute';
-import BusinessSelector from '../../slices/business/selector';
 
-import SessionSelector from '../../slices/session/selector';
-import { wrapper } from '../../slices/store';
+import BusinessLayout from 'components/business-layout';
+import Engage from 'components/business/dashboard/Engage';
+import Overall from 'components/business/dashboard/Overall';
+import ReviewStatistics from 'components/business/dashboard/ReviewStatistics';
+import BusinessSelector from 'slices/business/selector';
 
-export const getServerSideProps = wrapper.getServerSideProps((store) => async (context) => {
-  const session = SessionSelector.getSession(store.getState());
-  if (!session.isAuthenticated) {
+export const getServerSideProps = async (context) => {
+  const session = await getSession(context);
+  if (!session) {
     return {
       redirect: {
         destination: `/login?returnUrl=${context.resolvedUrl}`,
@@ -20,8 +18,8 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async (c
       },
     };
   }
-  return {};
-});
+  return { props: {} };
+};
 
 const Business = () => {
   const currentCompany = useSelector(BusinessSelector.selectCurrentCompany);
@@ -63,4 +61,4 @@ const Business = () => {
   );
 };
 
-export default PrivateRoute(Business);
+export default Business;

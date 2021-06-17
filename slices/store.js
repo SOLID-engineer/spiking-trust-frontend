@@ -1,6 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { createWrapper } from 'next-redux-wrapper';
-import { nextReduxCookieMiddleware, wrapMakeStore } from 'next-redux-cookie-wrapper';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import sessionSlice from './session';
 import businessSlice from './business';
 
@@ -9,15 +7,10 @@ const store = configureStore({
     [sessionSlice.name]: sessionSlice.reducer,
     [businessSlice.name]: businessSlice.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().prepend(
-      nextReduxCookieMiddleware({
-        subtrees: ['session'],
-      })
-    ),
+  middleware: getDefaultMiddleware({
+    thunk: true,
+    immutableCheck: true,
+  }),
 });
-
-const makeStore = wrapMakeStore(() => store);
-export const wrapper = createWrapper(makeStore);
 
 export default store;

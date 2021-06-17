@@ -9,12 +9,11 @@ import BusinessLayout from 'components/business-layout';
 import StarRating from 'components/common/StarRating';
 import PrivateRoute from 'components/routes/PrivateRoute';
 import BusinessSelector from 'slices/business/selector';
-import SessionSelector from 'slices/session/selector';
-import { wrapper } from 'slices/store';
+import { getSession } from 'next-auth/client';
 
-export const getServerSideProps = wrapper.getServerSideProps((store) => async (context) => {
-  const session = SessionSelector.getSession(store.getState());
-  if (!session.isAuthenticated) {
+export const getServerSideProps = async (context) => {
+  const session = await getSession(context);
+  if (!session) {
     return {
       redirect: {
         destination: `/login?returnUrl=${context.resolvedUrl}`,
@@ -22,8 +21,8 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async (c
       },
     };
   }
-  return {};
-});
+  return { props: {} };
+};
 
 const Reviews = () => {
   const router = useRouter();
