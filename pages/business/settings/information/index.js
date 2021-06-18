@@ -1,12 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
+import axios from 'axios';
+import { useFormik } from 'formik';
 
 import BusinessSelector from 'slices/business/selector';
 import BusinessLayout from 'components/business-layout';
-import { useFormik } from 'formik';
-import axios from 'axios';
+import { getSession } from 'next-auth/client';
 import InformationForm from './InformationForm';
+
+export const getServerSideProps = async (context) => {
+  const session = await getSession(context);
+  if (!session) {
+    return {
+      redirect: {
+        destination: `/login?returnUrl=${context.resolvedUrl}`,
+        permanent: false,
+      },
+    };
+  }
+  return { props: {} };
+};
 
 const Information = () => {
   const currentCompany = useSelector(BusinessSelector.selectCurrentCompany);

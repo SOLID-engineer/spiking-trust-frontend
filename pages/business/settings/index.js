@@ -1,9 +1,23 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import Link from 'next/link';
+import { getSession } from 'next-auth/client';
 
 import BusinessSelector from 'slices/business/selector';
 import BusinessLayout from 'components/business-layout';
-import Link from 'next/link';
+
+export const getServerSideProps = async (context) => {
+  const session = await getSession(context);
+  if (!session) {
+    return {
+      redirect: {
+        destination: `/login?returnUrl=${context.resolvedUrl}`,
+        permanent: false,
+      },
+    };
+  }
+  return { props: {} };
+};
 
 const Settings = () => {
   const currentCompany = useSelector(BusinessSelector.selectCurrentCompany);
@@ -22,10 +36,12 @@ const Settings = () => {
                   <div className="text-gray-500">Edit your public details.</div>
                 </a>
               </Link>
-              <a className="block hover:bg-gray-100 p-2">
-                <div className="font-semibold">Categories</div>
-                <div className="text-gray-500">Add or change your business categories.</div>
-              </a>
+              <Link href="/business/settings/categories">
+                <div className="block hover:bg-gray-100 p-2 cursor-pointer">
+                  <div className="font-semibold">Categories</div>
+                  <div className="text-gray-500">Add or change your business categories.</div>
+                </div>
+              </Link>
             </div>
           </div>
         </div>

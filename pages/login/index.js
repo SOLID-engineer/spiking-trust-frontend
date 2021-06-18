@@ -1,18 +1,13 @@
-import axios from 'axios';
 import React from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import { GoogleLogin } from 'react-google-login';
-import { useDispatch } from 'react-redux';
+import { getSession, signIn } from 'next-auth/client';
 
-import Layout from '../../components/layout';
-import AuthRoute from '../../components/routes/AuthRoute';
-import { loginSuccess } from '../../slices/session';
-import SessionSelector from '../../slices/session/selector';
-import { wrapper } from '../../slices/store';
+import Layout from 'components/layout';
 
-export const getServerSideProps = wrapper.getServerSideProps((store) => async () => {
-  const session = SessionSelector.getSession(store.getState());
-  if (session.isAuthenticated) {
+export const getServerSideProps = async (context) => {
+  const session = await getSession(context);
+  if (session) {
     return {
       redirect: {
         destination: '/',
@@ -20,29 +15,19 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ()
       },
     };
   }
-  return {};
-});
+  return { props: {} };
+};
 
 const Login = () => {
-  const dispatch = useDispatch();
-  const handleLogin = async (data) => {
-    try {
-      const response = await axios.post('/login', data);
-      const { accessToken } = response.data;
-      axios.defaults.headers.Authorization = `Bearer ${accessToken}`;
-      dispatch(loginSuccess({ accessToken }));
-    } catch (error) {}
-  };
-
   const responseFacebook = async (data) => {
     if (data.accessToken) {
-      handleLogin({ facebook: data.accessToken });
+      await signIn('credentials-facebook', { facebook: data.accessToken });
     }
   };
 
   const responseGoogle = async (data) => {
     if (data.tokenId) {
-      handleLogin({ google: data.tokenId });
+      await signIn('credentials-google', { google: data.accessToken });
     }
   };
 
@@ -94,4 +79,4 @@ const Login = () => {
   );
 };
 
-export default AuthRoute(Login);
+export default Login;

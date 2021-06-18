@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { HYDRATE } from 'next-redux-wrapper';
 
 export const initialState = {
   user: null,
@@ -23,12 +22,6 @@ const sessionSlice = createSlice({
       state.user = action.payload;
     },
     logout: () => initialState,
-  },
-  extraReducers: {
-    [HYDRATE]: (state, action) => ({
-      ...state,
-      ...action.payload.session,
-    }),
   },
 });
 
