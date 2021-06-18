@@ -11,6 +11,10 @@ import { getUser, reset } from '../slices/session';
 const TIMEOUT = 1 * 30 * 1000;
 axios.defaults.timeout = TIMEOUT;
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+console.log(
+  '🚀 ~ file: _app.js ~ line 14 ~ process.env.NEXT_PUBLIC_BACKEND_URL',
+  process.env.NEXT_PUBLIC_BACKEND_URL
+);
 
 axios.interceptors.response.use(
   (response) => response,

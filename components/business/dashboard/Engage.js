@@ -2,8 +2,8 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import BusinessSelector from '../../../slices/business/selector';
-import StarRating from '../../common/StarRating';
+import BusinessSelector from 'slices/business/selector';
+import StarRating from 'components/common/StarRating';
 
 const relativeTime = require('dayjs/plugin/relativeTime');
 
@@ -34,25 +34,33 @@ const Engage = () => {
 
   return (
     <div>
-      {data?.items !== undefined && data.items.length > 0 && (
-        <div>
-          <h2 className="font-semibold text-lg">Engage</h2>
-          <div className="text-xs mb-4">Your {PER_PAGE} latest reviews</div>
-          <div className="space-y-2">
-            {data.items.map((item) => (
-              <div key={item.id} className="p-2 text-sm">
-                <div className="mb-2 whitespace-nowrap break-normal truncate">{item.content}</div>
-                <div className="flex flex-row space-x-2 items-center">
-                  <StarRating value={item.rating} size="sm" />
-                  <span>
-                    By {item.author.first_name} {item.author.last_name},
-                  </span>
-                  <span>{dayjs().to(dayjs(item.updated_at))}</span>
-                </div>
+      {isLoading ? (
+        <div className="h-40"></div>
+      ) : (
+        <>
+          {data?.items !== undefined && data.items.length > 0 && (
+            <div>
+              <h2 className="font-semibold text-lg">Engage</h2>
+              <div className="text-xs mb-4">Your {PER_PAGE} latest reviews</div>
+              <div className="space-y-2">
+                {data.items.map((item) => (
+                  <div key={item.id} className="p-2 text-sm">
+                    <div className="mb-2 whitespace-nowrap break-normal truncate">
+                      {item.content}
+                    </div>
+                    <div className="flex flex-row space-x-2 items-center">
+                      <StarRating value={item.rating} size="sm" />
+                      <span>
+                        By {item.author.first_name} {item.author.last_name},
+                      </span>
+                      <span>{dayjs().to(dayjs(item.updated_at))}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

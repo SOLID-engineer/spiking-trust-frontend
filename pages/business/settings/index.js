@@ -16,6 +16,12 @@ const Settings = () => {
               Profile Settings: <span className="text-gray-500">{currentCompany.domain}</span>
             </h3>
             <div className="grid grid-cols-3 gap-4">
+              <Link href="/business/settings/information">
+                <a className="block hover:bg-gray-100 p-2">
+                  <div className="font-semibold">Profile Page</div>
+                  <div className="text-gray-500">Edit your public details.</div>
+                </a>
+              </Link>
               <a className="block hover:bg-gray-100 p-2">
                 <div className="font-semibold">Profile Page</div>
                 <div className="text-gray-500">Edit your public details.</div>
