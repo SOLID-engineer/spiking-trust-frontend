@@ -11,7 +11,6 @@ export default function Layout({ children }) {
   const handleLogout = () => {
     dispatch(logout());
   };
-
   return (
     <div className="pt-16 relative">
       <header className="text-white bg-indigo-800 fixed left-0 right-0 top-0 z-30">
@@ -38,6 +37,13 @@ export default function Layout({ children }) {
                           <a className="px-6 py-3 block cursor-pointer">My Companies</a>
                         </Link>
                       </li>
+                      {session.user.role && (
+                        <li>
+                          <Link href="/admin">
+                            <a className="px-6 py-3 block cursor-pointer">Admin</a>
+                          </Link>
+                        </li>
+                      )}
                       <li>
                         <a className="px-6 py-3 block cursor-pointer" onClick={handleLogout}>
                           Logout

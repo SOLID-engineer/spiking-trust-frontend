@@ -32,7 +32,7 @@ const Categories = (props) => {
                 <ul>
                   {categories.map((category) => {
                     return (
-                      <li key={category.id} className="mb-4 " key={category.id}>
+                      <li key={`ls-${category.id}`} className="mb-4 " key={category.id}>
                         <a href={`#${category.slug}`}>
                           <span className="hover:text-blue-700">{category.name}</span>
                         </a>
@@ -63,7 +63,7 @@ const Categories = (props) => {
                       {category?.children &&
                         category.children.map((child) => {
                           return (
-                            <div>
+                            <div key={child.id}>
                               <Link href={`/categories/${child.slug}`}>
                                 <span className="hover:text-blue-700 cursor-pointer">
                                   {child.name}
