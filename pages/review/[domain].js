@@ -195,7 +195,9 @@ const Review = ({ company, data }) => {
                         active={filterStars.includes('5')}
                       />
                       <div className="flex-none text-right text-gray-400 w-16">
-                        {`${(companyRate['5'] * 100) / company.reviews_count}%`}
+                        {`${parseFloat((companyRate['5'] * 100) / company.reviews_count).toFixed(
+                          1
+                        )}%`}
                       </div>
                     </div>
                     <div className="flex flex-row items-center justify-between mb-2">
@@ -213,7 +215,9 @@ const Review = ({ company, data }) => {
                         active={filterStars.includes('4')}
                       />
                       <div className="flex-none text-right text-gray-400 w-16">
-                        {`${(companyRate['4'] * 100) / company.reviews_count}%`}
+                        {`${parseFloat((companyRate['4'] * 100) / company.reviews_count).toFixed(
+                          1
+                        )}%`}
                       </div>
                     </div>
                     <div className="flex flex-row items-center justify-between mb-2">
@@ -231,7 +235,9 @@ const Review = ({ company, data }) => {
                         active={filterStars.includes('3')}
                       />
                       <div className="flex-none text-right text-gray-400 w-16">
-                        {`${(companyRate['3'] * 100) / company.reviews_count}%`}
+                        {`${parseFloat((companyRate['3'] * 100) / company.reviews_count).toFixed(
+                          1
+                        )}%`}
                       </div>
                     </div>
                     <div className="flex flex-row items-center justify-between mb-2">
@@ -249,7 +255,9 @@ const Review = ({ company, data }) => {
                         active={filterStars.includes('2')}
                       />
                       <div className="flex-none text-right text-gray-400 w-16">
-                        {`${(companyRate['2'] * 100) / company.reviews_count}%`}
+                        {`${parseFloat((companyRate['2'] * 100) / company.reviews_count).toFixed(
+                          1
+                        )}%`}
                       </div>
                     </div>
                     <div className="flex flex-row items-center justify-between mb-2">
@@ -267,7 +275,9 @@ const Review = ({ company, data }) => {
                         active={filterStars.includes('1')}
                       />
                       <div className="flex-none text-right text-gray-400 w-16">
-                        {`${(companyRate['1'] * 100) / company.reviews_count}%`}
+                        {`${parseFloat((companyRate['1'] * 100) / company.reviews_count).toFixed(
+                          1
+                        )}%`}
                       </div>
                     </div>
                   </div>

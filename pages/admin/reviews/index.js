@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from 'components/admin';
-import PrivateRoute from 'components/routes/PrivateRoute';
 import Link from 'next/link';
 
-import SessionSelector from 'slices/session/selector';
-import { wrapper } from 'slices/store';
 import axios from 'axios';
 import EditIcon from 'components/icons/edit';
 import TrashIcon from 'components/icons/trash';
@@ -12,9 +9,11 @@ import dayjs from 'dayjs';
 import StarRating from 'components/common/StarRating';
 import Paginate from 'components/admin/paginate';
 
-export const getServerSideProps = wrapper.getServerSideProps((store) => async (context) => {
-  const session = SessionSelector.getSession(store.getState());
-  if (!session.isAuthenticated) {
+import { getSession } from 'next-auth/client';
+
+export const getServerSideProps = async (context) => {
+  const session = await getSession(context);
+  if (!session) {
     return {
       redirect: {
         destination: `/login?returnUrl=${context.resolvedUrl}`,
@@ -22,8 +21,8 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async (c
       },
     };
   }
-  return {};
-});
+  return { props: {} };
+};
 
 const ReviewAdmin = () => {
   const [reviews, setReviews] = useState([]);
@@ -174,4 +173,4 @@ const ReviewAdmin = () => {
     </AdminLayout>
   );
 };
-export default PrivateRoute(ReviewAdmin);
+export default ReviewAdmin;

@@ -1,14 +1,11 @@
 import React from 'react';
 
 import AdminLayout from 'components/admin';
-import PrivateRoute from '../../components/routes/PrivateRoute';
+import { getSession } from 'next-auth/client';
 
-import SessionSelector from '../../slices/session/selector';
-import { wrapper } from '../../slices/store';
-
-export const getServerSideProps = wrapper.getServerSideProps((store) => async (context) => {
-  const session = SessionSelector.getSession(store.getState());
-  if (!session.isAuthenticated) {
+export const getServerSideProps = async (context) => {
+  const session = await getSession(context);
+  if (!session) {
     return {
       redirect: {
         destination: `/login?returnUrl=${context.resolvedUrl}`,
@@ -16,11 +13,11 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async (c
       },
     };
   }
-  return {};
-});
+  return { props: {} };
+};
 
 const Business = () => {
   return <AdminLayout></AdminLayout>;
 };
 
-export default PrivateRoute(Business);
+export default Business;
