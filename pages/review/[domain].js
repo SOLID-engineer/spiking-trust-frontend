@@ -290,6 +290,19 @@ const Review = ({ company, data }) => {
                       <div className="mb-2 font-semibold text-lg">{review.title}</div>
                       <div>{review.content}</div>
                     </div>
+                    {review.reply && (
+                      <div className="bg-gray-100 p-4 text-sm">
+                        <div className="flex flex-row items-center justify-between mb-2">
+                          <span className="font-semibold">
+                            Reply from {company.name || company.domain}
+                          </span>
+                          <span className="text-gray-400">
+                            {dayjs().to(dayjs(review.reply.updated_at))}
+                          </span>
+                        </div>
+                        <div>hello</div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
