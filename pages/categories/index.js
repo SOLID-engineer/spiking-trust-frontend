@@ -3,16 +3,15 @@ import Link from 'next/link';
 import React from 'react';
 
 import Layout from '../../components/layout';
-import { wrapper } from '../../slices/store';
 
-export const getServerSideProps = wrapper.getServerSideProps((store) => async (context) => {
+export const getServerSideProps = async (context) => {
   const props = {};
   try {
     const response = await axios.get(`/categories`);
     props.categories = response.data;
   } catch (error) {}
   return { props };
-});
+};
 
 const Categories = (props) => {
   const { categories = {} } = props;

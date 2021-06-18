@@ -5,14 +5,12 @@ import React, { useState } from 'react';
 import * as Yup from 'yup';
 
 import Link from 'next/link';
-import Layout from '../../components/layout';
-import SessionSelector from '../../slices/session/selector';
-import { wrapper } from '../../slices/store';
-import PrivateRoute from '../../components/routes/PrivateRoute';
+import Layout from 'components/layout';
+import { getSession } from 'next-auth/client';
 
-export const getServerSideProps = wrapper.getServerSideProps((store) => async (context) => {
-  const session = SessionSelector.getSession(store.getState());
-  if (!session.isAuthenticated) {
+export const getServerSideProps = async (context) => {
+  const session = await getSession(context);
+  if (!session) {
     return {
       redirect: {
         destination: `/login?returnUrl=${context.resolvedUrl}`,
@@ -22,7 +20,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async (c
   }
   const props = {};
   return { props };
-});
+};
 
 const ClaimCompany = () => {
   const [isSuccess, setIsSuccess] = useState(false);
@@ -134,4 +132,4 @@ const ClaimCompany = () => {
   );
 };
 
-export default PrivateRoute(ClaimCompany);
+export default ClaimCompany;

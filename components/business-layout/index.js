@@ -100,9 +100,16 @@ const BusinessLayout = ({ pageTitle, headerBottom = null, children }) => {
                 <a className="px-6 py-2 block font-semibold hover:bg-gray-700">Reviews</a>
               </Link>
             </li>
-            {/* <li>
-              <a className="px-6 py-2 block font-semibold hover:bg-gray-700">Get Reviews</a>
-            </li> */}
+            <li>
+              <a className="px-6 py-2 block font-semibold hover:bg-gray-700">Analytics</a>
+              <ul>
+                <li>
+                  <Link href="/business/analytics/benchmark">
+                    <a className="px-6 py-2 block hover:bg-gray-700 text-sm">Benchmark</a>
+                  </Link>
+                </li>
+              </ul>
+            </li>
           </ul>
           <ul className="pb-2 space-y-1">
             {/* <li>

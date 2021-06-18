@@ -4,17 +4,15 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { getSession } from 'next-auth/client';
 
-import Layout from '../../components/layout';
-import StarRating from '../../components/common/StarRating';
-import StarRatingInput from '../../components/common/StarRatingInput';
-import { wrapper } from '../../slices/store';
-import SessionSelector from '../../slices/session/selector';
-import PrivateRoute from '../../components/routes/PrivateRoute';
+import Layout from 'components/layout';
+import StarRating from 'components/common/StarRating';
+import StarRatingInput from 'components/common/StarRatingInput';
 
-export const getServerSideProps = wrapper.getServerSideProps((store) => async (context) => {
-  const session = SessionSelector.getSession(store.getState());
-  if (!session.isAuthenticated) {
+export const getServerSideProps = async (context) => {
+  const session = await getSession(context);
+  if (!session) {
     return {
       redirect: {
         destination: `/login?returnUrl=${context.resolvedUrl}`,
@@ -31,7 +29,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async (c
     props.company = response.data;
   } catch (error) {}
   return { props };
-});
+};
 
 const Evaluate = ({ company, initialRating }) => {
   const router = useRouter();
@@ -158,4 +156,4 @@ const Evaluate = ({ company, initialRating }) => {
   );
 };
 
-export default PrivateRoute(Evaluate);
+export default Evaluate;

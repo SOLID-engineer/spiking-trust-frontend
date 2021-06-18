@@ -1,17 +1,14 @@
 /* eslint-disable no-use-before-define */
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import Layout from '../../../components/layout';
-import SessionSelector from '../../../slices/session/selector';
-import { wrapper } from '../../../slices/store';
-import PrivateRoute from '../../../components/routes/PrivateRoute';
+import { getSession } from 'next-auth/client';
+import Layout from 'components/layout';
 
-export const getServerSideProps = wrapper.getServerSideProps((store) => async (context) => {
-  const session = SessionSelector.getSession(store.getState());
-  if (!session.isAuthenticated) {
+export const getServerSideProps = async (context) => {
+  const session = await getSession(context);
+  if (!session) {
     return {
       redirect: {
         destination: `/login?returnUrl=${context.resolvedUrl}`,
@@ -21,7 +18,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async (c
   }
   const props = {};
   return { props };
-});
+};
 
 const ClaimCompany = () => {
   const router = useRouter();
@@ -85,4 +82,4 @@ const ClaimCompany = () => {
   );
 };
 
-export default PrivateRoute(ClaimCompany);
+export default ClaimCompany;
