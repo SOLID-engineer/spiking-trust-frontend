@@ -9,7 +9,7 @@ export default function Create() {
 
   const handleSubmit = async (values) => {
     try {
-      const response = await axios.post('/admin/caetgories', {
+      const response = await axios.post('/admin/categories', {
         parent_id: values.parent_id,
         status: 1,
         name: values.name,
@@ -31,7 +31,7 @@ export default function Create() {
   });
 
   const getCategories = async () => {
-    const response = await axios.get('/admin/caetgories', {
+    const response = await axios.get('/admin/categories', {
       params: {
         level: 2,
       },

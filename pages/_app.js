@@ -16,7 +16,7 @@ axios.defaults.baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response.status === 401) {
+    if (error.response?.status === 401) {
       store.dispatch(reset());
       signOut({ callbackUrl: '/' });
     }
