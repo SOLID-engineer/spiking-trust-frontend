@@ -194,7 +194,9 @@ const Review = ({ company, data }) => {
                         activePercentage={companyRate['5'] / company.reviews_count}
                         active={filterStars.includes('5')}
                       />
-                      <div className="flex-none text-right text-gray-400 w-16"> 77% </div>
+                      <div className="flex-none text-right text-gray-400 w-16">
+                        {`${(companyRate['5'] * 100) / company.reviews_count}%`}
+                      </div>
                     </div>
                     <div className="flex flex-row items-center justify-between mb-2">
                       <div className="flex flex-none flex-row items-center space-x-2 w-28">
@@ -210,7 +212,9 @@ const Review = ({ company, data }) => {
                         activePercentage={companyRate['4'] / company.reviews_count}
                         active={filterStars.includes('4')}
                       />
-                      <div className="flex-none text-right text-gray-400 w-16"> 9% </div>
+                      <div className="flex-none text-right text-gray-400 w-16">
+                        {`${(companyRate['4'] * 100) / company.reviews_count}%`}
+                      </div>
                     </div>
                     <div className="flex flex-row items-center justify-between mb-2">
                       <div className="flex flex-none flex-row items-center space-x-2 w-28">
@@ -226,7 +230,9 @@ const Review = ({ company, data }) => {
                         activePercentage={companyRate['3'] / company.reviews_count}
                         active={filterStars.includes('3')}
                       />
-                      <div className="flex-none text-right text-gray-400 w-16"> 3% </div>
+                      <div className="flex-none text-right text-gray-400 w-16">
+                        {`${(companyRate['3'] * 100) / company.reviews_count}%`}
+                      </div>
                     </div>
                     <div className="flex flex-row items-center justify-between mb-2">
                       <div className="flex flex-none flex-row items-center space-x-2 w-28">
@@ -242,7 +248,9 @@ const Review = ({ company, data }) => {
                         activePercentage={companyRate['2'] / company.reviews_count}
                         active={filterStars.includes('2')}
                       />
-                      <div className="flex-none text-right text-gray-400 w-16"> 2% </div>
+                      <div className="flex-none text-right text-gray-400 w-16">
+                        {`${(companyRate['2'] * 100) / company.reviews_count}%`}
+                      </div>
                     </div>
                     <div className="flex flex-row items-center justify-between mb-2">
                       <div className="flex flex-none flex-row items-center space-x-2 w-28">
@@ -258,7 +266,9 @@ const Review = ({ company, data }) => {
                         activePercentage={companyRate['1'] / company.reviews_count}
                         active={filterStars.includes('1')}
                       />
-                      <div className="flex-none text-right text-gray-400 w-16"> 9% </div>
+                      <div className="flex-none text-right text-gray-400 w-16">
+                        {`${(companyRate['1'] * 100) / company.reviews_count}%`}
+                      </div>
                     </div>
                   </div>
                   <InputSearch getReviews={searchHandler} />
