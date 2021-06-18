@@ -30,7 +30,7 @@ export default function Edit({ category }) {
   const formik = useFormik({
     initialValues: {
       name: '',
-      parent_id: '',
+      parent_id: '0',
     },
     onSubmit: handleSubmit,
   });
@@ -88,7 +88,7 @@ export default function Edit({ category }) {
                   value={formik.values.parent_id}
                   className="block appearance-none w-full bg-grey-lighter text-xs border border-grey-lighter text-grey-darker p-2 pr-8 rounded"
                 >
-                  <option value="">Select parent category...</option>
+                  <option value="0">Select parent category...</option>
                   {categories.map((category) => {
                     return (
                       <option key={category.id} value={category.id}>
