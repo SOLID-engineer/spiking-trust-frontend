@@ -2,11 +2,14 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
+import { isEmpty } from 'lodash';
 import StarRating from '../../components/common/StarRating';
 import StarRatingInput from '../../components/common/StarRatingInput';
 import Layout from '../../components/layout';
+import PercentageBar from './PercentageBar';
+import InputSearch from './InputSearch';
 
 const relativeTime = require('dayjs/plugin/relativeTime');
 
@@ -14,15 +17,15 @@ dayjs.extend(relativeTime);
 
 export async function getServerSideProps(context) {
   const { domain } = context.params;
-  const { page = 1 } = context.query;
   const props = {};
   try {
     let response = await axios.get(`/companies/${domain}`);
     props.company = response.data;
-    response = await axios.get(`/companies/${domain}/reviews`, { params: { page } });
-    console.log('🚀 ~ file: [domain].js ~ line 23 ~ getServerSideProps ~ response', response);
+
+    response = await axios.get(`/companies/${domain}/reviews`, { params: context.query });
 
     props.data = response.data;
+    const { page = 1 } = context.query;
     if (response.data.items.length === 0 && page !== 1) {
       return {
         redirect: {
@@ -38,18 +41,70 @@ export async function getServerSideProps(context) {
 const Review = ({ company, data }) => {
   const router = useRouter();
   const [reviews, setReviews] = useState(data.items);
-  const [currentPage, setCurrentPage] = useState(data.current_page);
+  const [companyRate, setCompanyRate] = useState([]);
   const [lastPage, setLastPage] = useState(data.last_page);
+  const [currentPage, setCurrentPage] = useState(data.current_page);
 
-  const getReviews = async (page) => {
+  const { stars: filterStars = [] } = router.query;
+
+  const getReviewsRates = async () => {
+    try {
+      const response = await axios.get(`/companies/${company.uuid}/info`);
+      setCompanyRate(response?.data?.stars);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getReviewsRates();
+  }, []);
+
+  const getReviews = async (params) => {
     try {
       const response = await axios.get(`/companies/${company.domain}/reviews`, {
-        params: { page },
+        params,
       });
       setReviews(response.data.items);
       setCurrentPage(response.data.current_page);
       setLastPage(response.data.last_page);
     } catch (error) {}
+  };
+
+  const filterStarHandler = (star) => {
+    const { stars = [], page, ...rest } = router.query;
+    let newList;
+    if (isEmpty(stars)) newList = star;
+    else if (stars.includes(star)) {
+      if (typeof stars === 'string') newList = null;
+      else newList = stars.filter((value) => value !== star);
+    } else if (typeof stars === 'string') newList = [stars, star];
+    else newList = [...stars, star];
+    router.push(
+      { pathname: router.pathname, query: newList === null ? rest : { ...rest, stars: newList } },
+      undefined,
+      {
+        shallow: true,
+      }
+    );
+    getReviews({ ...rest, stars: newList });
+  };
+
+  const searchHandler = (params) => {
+    const { search, page, ...rest } = router.query;
+    if (params?.search) {
+      router.push(
+        {
+          pathname: router.pathname,
+          query: { ...rest, search: params.search },
+        },
+        undefined,
+        { shallow: true }
+      );
+    } else {
+      router.push({ pathname: router.pathname, query: rest }, undefined, {
+        shallow: true,
+      });
+    }
+    getReviews({ ...rest, search: params.search });
   };
 
   const handleNextPage = async () => {
@@ -58,7 +113,7 @@ const Review = ({ company, data }) => {
       undefined,
       { shallow: true }
     );
-    await getReviews(currentPage + 1);
+    await getReviews({ ...router.query, page: currentPage + 1 });
   };
 
   const handlePreviousPage = async () => {
@@ -67,7 +122,7 @@ const Review = ({ company, data }) => {
       undefined,
       { shallow: true }
     );
-    await getReviews(currentPage - 1);
+    await getReviews({ ...router.query, page: currentPage - 1 });
   };
 
   return (
@@ -117,6 +172,97 @@ const Review = ({ company, data }) => {
               </div>
 
               <div className="mb-4">
+                <div className="bg-white p-4 mb-2">
+                  <div className="pb-4 border-b">
+                    <span className="font-semibold space-x-2 text-lg">
+                      <span className="font-bold ">Reviews</span>
+                      <span className="text-gray-400">{company.reviews_count}</span>
+                    </span>
+                  </div>
+                  <div className="py-4">
+                    <div className="flex flex-row items-center justify-between mb-2">
+                      <div className="flex flex-none flex-row items-center space-x-2 w-28">
+                        <input
+                          onChange={() => filterStarHandler('5')}
+                          defaultChecked={filterStars.includes('5')}
+                          type="checkbox"
+                        />
+                        <span>Excellent</span>
+                      </div>
+                      <PercentageBar
+                        barColor="#00b67a"
+                        activePercentage={companyRate['5'] / company.reviews_count}
+                        active={filterStars.includes('5')}
+                      />
+                      <div className="flex-none text-right text-gray-400 w-16"> 77% </div>
+                    </div>
+                    <div className="flex flex-row items-center justify-between mb-2">
+                      <div className="flex flex-none flex-row items-center space-x-2 w-28">
+                        <input
+                          onChange={() => filterStarHandler('4')}
+                          defaultChecked={filterStars.includes('4')}
+                          type="checkbox"
+                        />
+                        <span>Great</span>
+                      </div>
+                      <PercentageBar
+                        barColor="#73cf11"
+                        activePercentage={companyRate['4'] / company.reviews_count}
+                        active={filterStars.includes('4')}
+                      />
+                      <div className="flex-none text-right text-gray-400 w-16"> 9% </div>
+                    </div>
+                    <div className="flex flex-row items-center justify-between mb-2">
+                      <div className="flex flex-none flex-row items-center space-x-2 w-28">
+                        <input
+                          onChange={() => filterStarHandler('3')}
+                          defaultChecked={filterStars.includes('3')}
+                          type="checkbox"
+                        />
+                        <span>Average</span>
+                      </div>
+                      <PercentageBar
+                        barColor="#ffce00"
+                        activePercentage={companyRate['3'] / company.reviews_count}
+                        active={filterStars.includes('3')}
+                      />
+                      <div className="flex-none text-right text-gray-400 w-16"> 3% </div>
+                    </div>
+                    <div className="flex flex-row items-center justify-between mb-2">
+                      <div className="flex flex-none flex-row items-center space-x-2 w-28">
+                        <input
+                          onChange={() => filterStarHandler('2')}
+                          defaultChecked={filterStars.includes('2')}
+                          type="checkbox"
+                        />
+                        <span>Poor</span>
+                      </div>
+                      <PercentageBar
+                        barColor="#ff8622"
+                        activePercentage={companyRate['2'] / company.reviews_count}
+                        active={filterStars.includes('2')}
+                      />
+                      <div className="flex-none text-right text-gray-400 w-16"> 2% </div>
+                    </div>
+                    <div className="flex flex-row items-center justify-between mb-2">
+                      <div className="flex flex-none flex-row items-center space-x-2 w-28">
+                        <input
+                          onChange={() => filterStarHandler('1')}
+                          defaultChecked={filterStars.includes('1')}
+                          type="checkbox"
+                        />
+                        <span>Bad</span>
+                      </div>
+                      <PercentageBar
+                        barColor="#ff3722"
+                        activePercentage={companyRate['1'] / company.reviews_count}
+                        active={filterStars.includes('1')}
+                      />
+                      <div className="flex-none text-right text-gray-400 w-16"> 9% </div>
+                    </div>
+                  </div>
+                  <InputSearch getReviews={searchHandler} />
+                </div>
                 {reviews.map((review) => (
                   <div className="bg-white p-4 mb-2" key={review.id}>
                     <div className="pb-4 border-b">
@@ -160,6 +306,10 @@ const Review = ({ company, data }) => {
                   )}
                 </div>
               )}
+              {reviews.length < 1 &&
+                (router.query.search !== undefined || router.query.stars !== undefined) && (
+                  <div>No reviews matching your search.</div>
+                )}
             </div>
             <div className="space-y-4">
               {company.claimed_at !== null && (
