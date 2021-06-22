@@ -9,9 +9,9 @@ const Dropdown = ({ button, dropdown }) => {
 
   return (
     <div className="relative">
-      <button type="button" onClick={toggleShow}>
+      <div role="button" onClick={toggleShow} aria-hidden="true">
         {button}
-      </button>
+      </div>
       {isShow && dropdown}
     </div>
   );

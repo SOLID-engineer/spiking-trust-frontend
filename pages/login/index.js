@@ -27,7 +27,7 @@ const Login = () => {
 
   const responseGoogle = async (data) => {
     if (data.tokenId) {
-      await signIn('credentials-google', { google: data.accessToken });
+      await signIn('credentials-google', { google: data.tokenId });
     }
   };
 

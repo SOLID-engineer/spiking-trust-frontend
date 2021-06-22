@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import BusinessSelector from '../../../slices/business/selector';
+import BusinessSelector from 'slices/business/selector';
+import Spinner from 'components/common/Spinner';
 
 const ReviewStatistics = () => {
   const currentCompany = useSelector(BusinessSelector.selectCurrentCompany);
@@ -24,14 +25,16 @@ const ReviewStatistics = () => {
   return (
     <div>
       {isLoading ? (
-        <div className="h-40"></div>
+        <div className="flex justify-center items-center h-24">
+          <Spinner />
+        </div>
       ) : (
         <>
           {data !== null && (
             <div>
               <h2 className="font-semibold text-lg mb-2">Your reviews</h2>
-              <div className="flex flex-row space-x-8">
-                <div className="flex-grow">
+              <div className="flex flex-row gap-4 flex-wrap">
+                <div className="flex-grow w-full lg:w-auto">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="border p-2">
                       <h3 className="mb-2 text-lg">Total Reviews</h3>
@@ -47,15 +50,17 @@ const ReviewStatistics = () => {
                     </div>
                     <div className="border p-2">
                       <h3 className="mb-2 text-lg">Your Reply Rate</h3>
-                      <div className="font-semibold text-2xl">NaN</div>
+                      <div className="font-semibold text-2xl">
+                        {`${((data.replied_reviews_count / data.reviews_count) * 100).toFixed(1)}%`}
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="flex-none w-96">
+                <div className="flex-none w-full lg:w-96">
                   <div className="mb-2">Star distribution</div>
                   <div className="space-y-2">
                     <div className="flex flex-row items-center text-sm">
-                      <div className="flex-none w-12">
+                      <div className="flex-none w-16">
                         {`${(((data.stars['5'] || 0) / data.reviews_count) * 100).toFixed(1)}%`}
                       </div>
                       <div className="flex-grow relative bg-gray-100 h-6">
@@ -74,7 +79,7 @@ const ReviewStatistics = () => {
                       </div>
                     </div>
                     <div className="flex flex-row items-center text-sm">
-                      <div className="flex-none w-12">
+                      <div className="flex-none w-16">
                         {`${(((data.stars['4'] || 0) / data.reviews_count) * 100).toFixed(1)}%`}
                       </div>
                       <div className="flex-grow relative bg-gray-100 h-6">
@@ -93,7 +98,7 @@ const ReviewStatistics = () => {
                       </div>
                     </div>
                     <div className="flex flex-row items-center text-sm">
-                      <div className="flex-none w-12">
+                      <div className="flex-none w-16">
                         {`${(((data.stars['3'] || 0) / data.reviews_count) * 100).toFixed(1)}%`}
                       </div>
                       <div className="flex-grow relative bg-gray-100 h-6">
@@ -112,7 +117,7 @@ const ReviewStatistics = () => {
                       </div>
                     </div>
                     <div className="flex flex-row items-center text-sm">
-                      <div className="flex-none w-12">
+                      <div className="flex-none w-16">
                         {`${(((data.stars['2'] || 0) / data.reviews_count) * 100).toFixed(1)}%`}
                       </div>
                       <div className="flex-grow relative bg-gray-100 h-6">
@@ -131,7 +136,7 @@ const ReviewStatistics = () => {
                       </div>
                     </div>
                     <div className="flex flex-row items-center text-sm">
-                      <div className="flex-none w-12">
+                      <div className="flex-none w-16">
                         {`${(((data.stars['1'] || 0) / data.reviews_count) * 100).toFixed(1)}%`}
                       </div>
                       <div className="flex-grow relative bg-gray-100 h-6">

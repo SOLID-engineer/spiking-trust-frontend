@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import BusinessSelector from 'slices/business/selector';
 import StarRating from 'components/common/StarRating';
+import Spinner from 'components/common/Spinner';
 
 const relativeTime = require('dayjs/plugin/relativeTime');
 
@@ -35,7 +36,9 @@ const Engage = () => {
   return (
     <div>
       {isLoading ? (
-        <div className="h-40"></div>
+        <div className="flex justify-center items-center h-24">
+          <Spinner />
+        </div>
       ) : (
         <>
           {data?.items !== undefined && data.items.length > 0 && (
