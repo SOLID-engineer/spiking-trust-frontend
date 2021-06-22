@@ -9,24 +9,16 @@ const options = {
       id: 'credentials-facebook',
       credentials: { facebook: { type: 'text' } },
       authorize: async (credentials) => {
-        try {
-          const response = await axios.post('/login', { facebook: credentials.facebook });
-          return response.data;
-        } catch (error) {
-          return { error };
-        }
+        const response = await axios.post('/login', { facebook: credentials.facebook });
+        return response.data;
       },
     }),
     Providers.Credentials({
       id: 'credentials-google',
       credentials: { google: { type: 'text' } },
       authorize: async (credentials) => {
-        try {
-          const response = await axios.post('/login', { google: credentials.google });
-          return response.data;
-        } catch (error) {
-          return { error };
-        }
+        const response = await axios.post('/login', { google: credentials.google });
+        return response.data;
       },
     }),
   ],
