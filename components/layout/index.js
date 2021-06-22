@@ -37,7 +37,7 @@ export default function Layout({ children }) {
                           <a className="px-6 py-3 block cursor-pointer">My Companies</a>
                         </Link>
                       </li>
-                      {session.user.role && (
+                      {session?.user?.role && (
                         <li>
                           <Link href="/admin">
                             <a className="px-6 py-3 block cursor-pointer">Admin</a>
