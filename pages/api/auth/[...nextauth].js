@@ -10,6 +10,7 @@ const options = {
       credentials: { facebook: { type: 'text' } },
       authorize: async (credentials) => {
         const response = await axios.post('/login', { facebook: credentials.facebook });
+        console.log('🚀 ~ file: [...nextauth].js ~ line 13 ~ authorize: ~ response', response);
         return response.data;
       },
     }),
@@ -38,10 +39,10 @@ const options = {
   },
   session: {
     jwt: true,
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 24 * 60 * 60, // 24 hours
+    // maxAge: 30 * 24 * 60 * 60, // 30 days
+    // updateAge: 24 * 60 * 60, // 24 hours
   },
-  debug: true,
+  debug: false,
 };
 
 export default (req, res) => NextAuth(req, res, options);
