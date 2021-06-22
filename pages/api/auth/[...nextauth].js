@@ -9,8 +9,9 @@ const options = {
       id: 'credentials-facebook',
       credentials: { facebook: { type: 'text' } },
       authorize: async (credentials) => {
-        const response = await axios.post('/login', { facebook: credentials.facebook });
-        console.log('🚀 ~ file: [...nextauth].js ~ line 13 ~ authorize: ~ response', response);
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login`, {
+          facebook: credentials.facebook,
+        });
         return response.data;
       },
     }),
@@ -18,7 +19,9 @@ const options = {
       id: 'credentials-google',
       credentials: { google: { type: 'text' } },
       authorize: async (credentials) => {
-        const response = await axios.post('/login', { google: credentials.google });
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login`, {
+          google: credentials.google,
+        });
         return response.data;
       },
     }),
