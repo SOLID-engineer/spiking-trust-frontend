@@ -9,6 +9,10 @@
     "start": "next start"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^28.0.0",
+    "@ckeditor/ckeditor5-build-decoupled-document": "^28.0.0",
+    "@ckeditor/ckeditor5-react": "^3.0.2",
+    "@headlessui/react": "^1.2.0",
     "@reduxjs/toolkit": "^1.5.1",
     "axios": "^0.21.1",
     "dayjs": "^1.10.5",

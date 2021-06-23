@@ -34,11 +34,11 @@ export default function MailConfig() {
     const response = await axios.get('/admin/settings/mail-settings');
     const { data } = response;
     formik.setValues({
-      mail_server: data.MAIL_HOST,
-      port: data.MAIL_PORT,
-      username: data.MAIL_USERNAME,
-      password: data.MAIL_PASSWORD,
-      encryption: data.MAIL_ENCRYPTION || 'none',
+      mail_server: data.mail_server,
+      port: data.port,
+      username: data.username,
+      password: data.password,
+      encryption: data.encryption || 'none',
     });
   };
 
@@ -48,10 +48,10 @@ export default function MailConfig() {
 
   return (
     <AdminLayout pageTitle="Mail Configuration">
-      <div className="w-full sm:px-6">
+      <div className="md:w-2/3 mx-auto sm:px-6">
         <div className="bg-white shadow px-4 md:px-10 pt-4 md:pt-7 pb-5 overflow-y-auto rounded-md">
           <form onSubmit={formik.handleSubmit} className="md:flex flex-wrap -mx-3 mb-6">
-            <div className="md:w-2/3 px-3 mb-6 md:mb-0">
+            <div className="w-full px-3 mb-6 md:mb-0">
               <label className="block tracking-wide text-grey-darker text-xs font-bold mb-2">
                 SMTP Mail Server
               </label>
@@ -64,7 +64,7 @@ export default function MailConfig() {
                 value={formik.values.mail_server}
               />
             </div>
-            <div className="md:w-2/3 px-3">
+            <div className="w-full px-3">
               <label className="block tracking-wide text-grey-darker text-xs font-bold mb-2">
                 SMTP Mail Port
               </label>
@@ -78,7 +78,7 @@ export default function MailConfig() {
               />
             </div>
 
-            <div className="md:w-2/3 px-3 mb-6 md:mb-0">
+            <div className="w-full px-3 mb-6 md:mb-0">
               <label className="block tracking-wide text-grey-darker text-xs font-bold mb-2">
                 SMTP Mail Username
               </label>
@@ -91,7 +91,7 @@ export default function MailConfig() {
                 value={formik.values.username}
               />
             </div>
-            <div className="md:w-2/3 px-3 mb-6 md:mb-0">
+            <div className="w-full px-3 mb-6 md:mb-0">
               <label className="block tracking-wide text-grey-darker text-xs font-bold mb-2">
                 SMTP Mail Password
               </label>
@@ -104,7 +104,7 @@ export default function MailConfig() {
                 value={formik.values.password}
               />
             </div>
-            <div className="md:w-2/3 px-3 mb-6 md:mb-0">
+            <div className="w-full px-3 mb-6 md:mb-0">
               <label className="block tracking-wide text-grey-darker text-xs font-bold mb-2">
                 SMTP Mail Encryption
               </label>
@@ -120,8 +120,8 @@ export default function MailConfig() {
                 <option value="ssl">SSL</option>
               </select>
             </div>
-            <div className="md:w-2/3 px-3 flex justify-end items-center pt-10">
-              <button type="submit" className="h-10 w-36 rounded font-xs bg-blue-500 text-white">
+            <div className="w-full px-3 flex justify-end items-center pt-10">
+              <button type="submit" className="h-10 w-36 rounded text-sm bg-blue-500 text-white">
                 Save Mail Settings
               </button>
             </div>

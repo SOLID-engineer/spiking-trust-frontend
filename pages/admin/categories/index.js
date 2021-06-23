@@ -53,7 +53,7 @@ const Business = () => {
   return (
     <AdminLayout pageTitle="Categories">
       <div className="w-full sm:px-6">
-        <div className="px-4 md:px-10 py-4 md:py-5 bg-gray-100  rounded-tl-md rounded-tr-md">
+        <div className="px-4 md:px-10 py-4 md:py-5 bg-gray-100">
           <div className="sm:flex items-center justify-between">
             <p
               tabIndex={0}
@@ -70,12 +70,12 @@ const Business = () => {
             </div>
           </div>
         </div>
-        <div className="bg-white shadow px-4 md:px-10 pt-4 md:pt-7 pb-5 overflow-y-auto rounded-bl-md rounded-br-md">
+        <div className="bg-white shadow pt-4 md:pt-7 pb-5 overflow-y-auto">
           <table className="w-full whitespace-nowrap">
             <thead>
-              <tr className="bg-gray-200 text-gray-600 w-full text-sm leading-none uppercase font-bold">
+              <tr className="w-full text-xs leading-none uppercase font-bold">
                 <th className="p-5 text-left">Name</th>
-                <th className="p-5 text-left">Actions</th>
+                <th className="p-5 text-left w-28">Actions</th>
               </tr>
             </thead>
             <tbody className="w-full">
@@ -83,7 +83,7 @@ const Business = () => {
                 return (
                   <tr
                     key={category.id}
-                    className="h-20 text-sm leading-none text-gray-800 bg-white border-b border-t border-gray-100"
+                    className="h-20 text-xs leading-none text-gray-800 bg-white border-b border-t border-gray-100"
                   >
                     <td className="cursor-pointer">
                       <div className="flex items-center">
@@ -99,13 +99,13 @@ const Business = () => {
                       </div>
                     </td>
                     <td>
-                      <div className="flex">
+                      <div className="flex pl-5">
                         <Link href={`/admin/categories/edit/${category.id}`}>
                           <p
                             className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6"
                             title="Edit details"
                           >
-                            <span className="text-sm text-gray-300">
+                            <span className="text-xs">
                               <EditIcon />
                             </span>
                           </p>
@@ -115,7 +115,7 @@ const Business = () => {
                           title="Detele details"
                           onClick={() => removeRecord(category.id)}
                         >
-                          <span className="text-sm text-gray-300">
+                          <span className="text-xs text-red-400">
                             <TrashIcon />
                           </span>
                         </button>

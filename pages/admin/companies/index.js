@@ -7,6 +7,7 @@ import EditIcon from 'components/icons/edit';
 import TrashIcon from 'components/icons/trash';
 
 import { getSession } from 'next-auth/client';
+import Paginate from 'components/admin/paginate';
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
@@ -23,11 +24,18 @@ export const getServerSideProps = async (context) => {
 
 const CompanyAdmin = () => {
   const [companies, setCompanies] = useState([]);
+  const [pages, setPages] = useState([]);
 
   const getCompanies = async () => {
     const response = await axios.get('/admin/companies', {});
     const { data = [] } = response;
     setCompanies(data.items);
+    setPages({
+      current_page: data.current_page,
+      last_page: data.last_page,
+      total: data.total,
+      per_page: data.per_page,
+    });
   };
 
   const removeRecord = async (id) => {
@@ -43,33 +51,38 @@ const CompanyAdmin = () => {
     }
   };
 
+  const changePage = () => {
+    getCompanies({ page: pages.current_page + 1 });
+  };
+
   useEffect(() => {
     getCompanies();
   }, []);
 
-  console.log();
-
   return (
     <AdminLayout pageTitle="Companies">
       <div className="w-full sm:px-6">
-        <div className="px-4 md:px-10 py-4 md:py-5 bg-gray-100  rounded-tl-md rounded-tr-md">
+        <div className="px-4 py-4 md:py-5 bg-gray-100">
           <div className="sm:flex items-center justify-between">
             <p
               tabIndex={0}
-              className="focus:outline-none text-base sm:text-lg md:text-xl lg:text-xl font-bold leading-normal text-gray-800"
+              className="focus:outline-none uppercase text-base sm:text-lg font-bold leading-normal text-gray-800"
             >
               List companies
             </p>
           </div>
         </div>
-        <div className="bg-white shadow md:px-6 pt-4 md:pt-7 pb-5 overflow-y-auto rounded-bl-md rounded-br-md">
-          <table className="w-full whitespace-nowrap">
+        <div className="bg-white pb-5 overflow-y-auto">
+          <p className="font-bold text-xs pt-5 px-4">
+            {companies.length}/{pages.total || 0} reviews
+          </p>
+          <table className="w-full whitespace-nowrap my-4">
             <thead>
-              <tr className="bg-gray-200 text-gray-600 w-full text-sm leading-none uppercase font-bold">
+              <tr className="w-full text-xs leading-none uppercase font-bold">
                 <th className="p-5 text-left">Url</th>
                 <th className="p-5 text-left">Claimed At</th>
                 <th className="p-5 text-left">Created At</th>
-                <th className="p-5 text-left">Actions</th>
+                <th className="p-5 text-left w-28">Actions</th>
               </tr>
             </thead>
             <tbody className="w-full">
@@ -77,7 +90,7 @@ const CompanyAdmin = () => {
                 return (
                   <tr
                     key={company.id}
-                    className="h-20 text-sm leading-none text-gray-800 bg-white border-b border-t border-gray-100"
+                    className="h-20 text-xs leading-none text-gray-800 bg-white border-b border-t border-gray-100"
                   >
                     <td className="cursor-pointer">
                       <div className="items-center">
@@ -113,7 +126,7 @@ const CompanyAdmin = () => {
                             className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6"
                             title="Edit details"
                           >
-                            <span className="text-sm">
+                            <span className="text-xs">
                               <EditIcon />
                             </span>
                           </p>
@@ -123,7 +136,7 @@ const CompanyAdmin = () => {
                           title="Detele details"
                           onClick={() => removeRecord(company.id)}
                         >
-                          <span className="text-sm text-red-400">
+                          <span className="text-xs text-red-400">
                             <TrashIcon />
                           </span>
                         </button>
@@ -134,6 +147,16 @@ const CompanyAdmin = () => {
               })}
             </tbody>
           </table>
+          <div className="flex text-gray-700 mt-4 justify-end">
+            <div className="flex flex-col items-center my-5 mx-5">
+              <Paginate
+                currentPage={pages.current_page}
+                lastPage={pages.last_page}
+                onClick={changePage}
+                total={pages.total}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </AdminLayout>

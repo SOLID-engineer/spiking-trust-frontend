@@ -30,8 +30,23 @@ const AdminLayout = ({ pageTitle = 'Dashboard', headerBottom = null, children })
                 </span>
               </Link>
             </li>
+            <li className="cursor-pointer">
+              <Link href="/admin/users">
+                <span className="px-6 py-1 block font-semibold text-sm hover:bg-gray-700">
+                  Users
+                </span>
+              </Link>
+            </li>
           </ul>
           <ul className="pb-2 space-y-1">
+            <li className="cursor-pointer">
+              <Link href="/admin/mail-templates">
+                <span className="px-6 py-1 block font-semibold text-sm hover:bg-gray-700">
+                  Mail Templates
+                </span>
+              </Link>
+            </li>
+
             <li className="cursor-pointer">
               <Link href="/admin/categories">
                 <span className="px-6 py-1 block font-semibold text-sm hover:bg-gray-700">

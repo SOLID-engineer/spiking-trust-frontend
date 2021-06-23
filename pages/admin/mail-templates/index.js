@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from 'components/admin';
-import Link from 'next/link';
 
+import { getSession } from 'next-auth/client';
+import Link from 'next/link';
 import axios from 'axios';
 import EditIcon from 'components/icons/edit';
 import TrashIcon from 'components/icons/trash';
-import dayjs from 'dayjs';
-import StarRating from 'components/common/StarRating';
 import Paginate from 'components/admin/paginate';
 
-import { getSession } from 'next-auth/client';
-
-export const getServerSideProps = async (context) => {
+export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!session) {
     return {
@@ -22,16 +19,16 @@ export const getServerSideProps = async (context) => {
     };
   }
   return { props: {} };
-};
+}
 
-const ReviewAdmin = () => {
-  const [reviews, setReviews] = useState([]);
+export default function Edit({ ...props }) {
+  const [templates, setTemplates] = useState([]);
   const [pages, setPages] = useState([]);
 
-  const getReviews = async (params = {}) => {
-    const response = await axios.get('/admin/reviews', { params });
+  const getTemplates = async () => {
+    const response = await axios.get('/admin/mail-templates', {});
     const { data = [] } = response;
-    setReviews(data.items);
+    setTemplates(data.items);
     setPages({
       current_page: data.current_page,
       last_page: data.last_page,
@@ -40,29 +37,29 @@ const ReviewAdmin = () => {
     });
   };
 
-  const changePage = () => {
-    getReviews({ page: pages.current_page + 1 });
-  };
-
   const removeRecord = async (id) => {
     try {
       const confirm = window.confirm('Are you sure delete record?');
       if (!confirm) return;
-      const response = await axios.delete(`/admin/reviews/${id}`);
+      const response = await axios.delete(`/admin/mail-templates/${id}`);
       const { msg = 'Deleted record success.' } = response;
       alert(msg);
-      getReviews();
+      getTemplates();
     } catch (error) {
       console.log(error);
     }
   };
 
+  const changePage = () => {
+    getTemplates({ page: pages.current_page + 1 });
+  };
+
   useEffect(() => {
-    getReviews();
+    getTemplates();
   }, []);
 
   return (
-    <AdminLayout pageTitle="reviews">
+    <AdminLayout pageTitle="Mail Templates">
       <div className="w-full sm:px-6">
         <div className="p-4 bg-gray-100">
           <div className="sm:flex items-center justify-between">
@@ -70,77 +67,57 @@ const ReviewAdmin = () => {
               tabIndex={0}
               className="focus:outline-none uppercase text-base sm:text-lg font-bold leading-normal text-gray-800"
             >
-              List reviews
+              Templates
             </p>
+            <div>
+              <button className="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 inline-flex sm:ml-3 mt-4 sm:mt-0 items-start justify-start px-6 py-3 bg-indigo-700 hover:bg-indigo-600 focus:outline-none rounded">
+                <Link href="/admin/mail-templates/edit">
+                  <p className="text-sm font-medium leading-none text-white">New templates</p>
+                </Link>
+              </button>
+            </div>
           </div>
         </div>
         <div className="bg-white pb-5 overflow-y-auto">
           <p className="font-bold text-xs pt-5 px-4">
-            {reviews.length}/{pages.total || 0} reviews
+            {templates.length}/{pages.total || 0} templates
           </p>
           <table className="w-full whitespace-nowrap">
             <thead>
               <tr className="w-full text-xs leading-none uppercase font-bold">
-                <th className="p-5 text-left">Reviewed Item</th>
-                <th className="p-5 text-left">Reviewed By</th>
-                <th className="p-5 text-left w-96">Title</th>
-                <th className="p-5 text-left w-96">Content</th>
-                <th className="p-5 text-left">IP</th>
-                <th className="p-5 text-left">Created at</th>
+                <th className="p-5 text-left">Name</th>
+                <th className="p-5 text-left">Title</th>
+                <th className="p-5 text-left">Type</th>
                 <th className="p-5 text-left w-28">Actions</th>
               </tr>
             </thead>
             <tbody className="w-full">
-              {reviews.map((review) => {
+              {templates.map((template) => {
                 return (
                   <tr
-                    key={review.id}
+                    key={template.id}
                     className="h-20 text-xs leading-none text-gray-800 bg-white border-b border-t border-gray-100"
                   >
                     <td className="cursor-pointer">
-                      <div className="flex flex-col">
-                        <span className="pl-5 py-2">{review.company?.name || '---'}</span>
-                        <a
-                          target="_blank"
-                          href={`https://${review.company?.name}`}
-                          className="pl-5 text-blue-500"
-                          rel="noreferrer"
-                        >
-                          {review.company?.domain}
-                        </a>
+                      <div className="flex items-center">
+                        <div className="pl-5">{template.name}</div>
                       </div>
                     </td>
-                    <td className="cursor-pointer">
-                      <div className="items-center">
-                        <p className="pl-5">{review.claimed_at || ' --- '}</p>
-                        <p className="pl-5">{review.claimed_by || ' --- '}</p>
-                      </div>
-                    </td>
-                    <td className="cursor-pointer">
-                      <div className="pl-5">
-                        <StarRating value={review.rating || 0} size="sm" />
-                        <p className="whitespace-pre-wrap mt-2">{review.title}</p>
-                      </div>
-                    </td>
-
-                    <td className="cursor-pointer">
-                      <p className="pl-5 whitespace-pre-wrap">{review.content}</p>
-                    </td>
-
-                    <td className="cursor-pointer">
-                      <p className="pl-5 whitespace-pre-wrap">{review.ip_address}</p>
-                    </td>
-
                     <td className="cursor-pointer">
                       <div className="flex items-center">
-                        <p className="pl-5">{dayjs(review.created_at).format('H:ss MM/DD/YYYY')}</p>
+                        <div className="pl-5">{template.title}</div>
+                      </div>
+                    </td>
+                    <td className="cursor-pointer">
+                      <div className="flex items-center">
+                        <div className="pl-5">{template.type}</div>
                       </div>
                     </td>
                     <td>
-                      <div className="flex ml-5">
-                        <Link href={`/admin/reviews/edit/${review.id}`}>
+                      <div className="flex pl-5">
+                        <Link href={`/admin/mail-templates/edit/${template.id}`}>
                           <p
-                            className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6"
+                            className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6 cursor-pointer"
                             title="Edit details"
                           >
                             <span className="text-xs">
@@ -151,7 +128,7 @@ const ReviewAdmin = () => {
                         <button
                           className="btn btn-sm btn-clean btn-icon mr-2  h-6 w-6"
                           title="Detele details"
-                          onClick={() => removeRecord(review.id)}
+                          onClick={() => removeRecord(template.id)}
                         >
                           <span className="text-xs text-red-400">
                             <TrashIcon />
@@ -178,5 +155,4 @@ const ReviewAdmin = () => {
       </div>
     </AdminLayout>
   );
-};
-export default ReviewAdmin;
+}

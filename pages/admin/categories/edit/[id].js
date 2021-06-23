@@ -3,20 +3,27 @@ import AdminLayout from 'components/admin';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import router from 'next/router';
+import { getSession } from 'next-auth/client';
 
 export async function getServerSideProps(context) {
+  const session = await getSession(context);
   const { id } = context.params;
-
-  const response = await axios.get(`/admin/categories/${id}/edit`);
-  const category = response.data;
-  return { props: { category } };
+  if (!session) {
+    return {
+      redirect: {
+        destination: `/login?returnUrl=${context.resolvedUrl}`,
+        permanent: false,
+      },
+    };
+  }
+  return { props: { category_id: id } };
 }
 
-export default function Edit({ category }) {
+export default function Edit({ category_id }) {
   const [categories, setCategories] = useState([]);
   const handleSubmit = async (values) => {
     try {
-      const response = await axios.put(`/admin/categories/${category.id}`, {
+      const response = await axios.put(`/admin/categories/${category_id}`, {
         parent_id: values.parent_id,
         status: 1,
         name: values.name,
@@ -35,6 +42,15 @@ export default function Edit({ category }) {
     onSubmit: handleSubmit,
   });
 
+  const getCategory = async () => {
+    const response = await axios.get(`/admin/categories/${category_id}/edit`);
+    const { data } = response;
+    formik.setValues({
+      name: data.name,
+      parent_id: data.parent_id,
+    });
+  };
+
   const getCategories = async () => {
     const response = await axios.get('/admin/categories', {
       params: {
@@ -47,23 +63,15 @@ export default function Edit({ category }) {
 
   useEffect(() => {
     getCategories();
+    getCategory();
   }, []);
-
-  useEffect(() => {
-    if (category) {
-      formik.setValues({
-        name: category.name,
-        parent_id: category.parent_id,
-      });
-    }
-  }, [category]);
 
   return (
     <AdminLayout pageTitle="Create categories">
-      <div className="w-full sm:px-6">
+      <div className="md:w-2/3 mx-auto sm:px-6">
         <div className="bg-white shadow px-4 md:px-10 pt-4 md:pt-7 pb-5 overflow-y-auto rounded-md">
           <form onSubmit={formik.handleSubmit} className="md:flex flex-wrap -mx-3 mb-6">
-            <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+            <div className="md:w-full px-3 mb-6 md:mb-0">
               <label className="block tracking-wide text-grey-darker text-xs font-bold mb-2">
                 Name category
               </label>
@@ -76,7 +84,7 @@ export default function Edit({ category }) {
                 value={formik.values.name}
               />
             </div>
-            <div className="md:w-1/2 px-3">
+            <div className="md:w-full px-3">
               <label className="block tracking-wide text-grey-darker text-xs font-bold mb-2">
                 Parent Category
               </label>

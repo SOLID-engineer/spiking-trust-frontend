@@ -6,7 +6,7 @@ import { signOut, useSession } from 'next-auth/client';
 
 export default function Layout({ children }) {
   const [session, loading] = useSession();
-
+  console.log('session', session);
   const handleLogout = (e) => {
     e.preventDefault();
     signOut({ callbackUrl: '/' });

@@ -9,7 +9,7 @@ export default function Create() {
 
   const handleSubmit = async (values) => {
     try {
-      const response = await axios.post('/admin/caetgories', {
+      const response = await axios.post('/admin/categories', {
         parent_id: values.parent_id,
         status: 1,
         name: values.name,
@@ -31,7 +31,7 @@ export default function Create() {
   });
 
   const getCategories = async () => {
-    const response = await axios.get('/admin/caetgories', {
+    const response = await axios.get('/admin/categories', {
       params: {
         level: 2,
       },
@@ -46,10 +46,10 @@ export default function Create() {
 
   return (
     <AdminLayout pageTitle="Create categories">
-      <div className="w-full sm:px-6">
-        <div className="bg-white shadow px-4 md:px-10 pt-4 md:pt-7 pb-5 overflow-y-auto rounded-md">
+      <div className="md:w-2/3 mx-auto sm:px-6">
+        <div className="bg-white px-4 md:px-10 pt-4 md:pt-7 pb-5 overflow-y-auto rounded-md">
           <form onSubmit={formik.handleSubmit} className="md:flex flex-wrap -mx-3 mb-6">
-            <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+            <div className="md:w-full px-3 mb-6 md:mb-0">
               <label className="block tracking-wide text-grey-darker text-xs font-bold mb-2">
                 Name category
               </label>
@@ -62,7 +62,7 @@ export default function Create() {
                 value={formik.values.name}
               />
             </div>
-            <div className="md:w-1/2 px-3">
+            <div className="md:w-full px-3">
               <label className="block tracking-wide text-grey-darker text-xs font-bold mb-2">
                 Parent Category
               </label>
@@ -86,10 +86,7 @@ export default function Create() {
               </div>
             </div>
             <div className="md:w-full px-3 flex justify-end items-center pt-10">
-              <button
-                type="submit"
-                className="h-10 w-36 rounded font-medium bg-blue-500 text-white"
-              >
+              <button type="submit" className="h-10 w-36 text-sm font-sm bg-blue-500 text-white">
                 Save
               </button>
             </div>

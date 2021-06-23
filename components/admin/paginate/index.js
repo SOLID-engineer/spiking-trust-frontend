@@ -62,9 +62,11 @@ export default function Paginate({ currentPage = 1, lastPage = 0, ...props }) {
   };
   return (
     <>
-      <div className="flex text-gray-700">
-        <div className="flex h-8 font-medium ">{renderPages()}</div>
-      </div>
+      {props.total > 0 && (
+        <div className="flex text-gray-700">
+          <div className="flex h-8 font-medium ">{renderPages()}</div>
+        </div>
+      )}
     </>
   );
 }
