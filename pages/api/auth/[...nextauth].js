@@ -9,24 +9,20 @@ const options = {
       id: 'credentials-facebook',
       credentials: { facebook: { type: 'text' } },
       authorize: async (credentials) => {
-        try {
-          const response = await axios.post('/login', { facebook: credentials.facebook });
-          return response.data;
-        } catch (error) {
-          return { error };
-        }
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login`, {
+          facebook: credentials.facebook,
+        });
+        return response.data;
       },
     }),
     Providers.Credentials({
       id: 'credentials-google',
       credentials: { google: { type: 'text' } },
       authorize: async (credentials) => {
-        try {
-          const response = await axios.post('/login', { google: credentials.google });
-          return response.data;
-        } catch (error) {
-          return { error };
-        }
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login`, {
+          google: credentials.google,
+        });
+        return response.data;
       },
     }),
   ],
@@ -46,10 +42,10 @@ const options = {
   },
   session: {
     jwt: true,
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 24 * 60 * 60, // 24 hours
+    // maxAge: 30 * 24 * 60 * 60, // 30 days
+    // updateAge: 24 * 60 * 60, // 24 hours
   },
-  debug: true,
+  debug: false,
 };
 
 export default (req, res) => NextAuth(req, res, options);

@@ -310,7 +310,7 @@ const Review = ({ company, data }) => {
                             {dayjs().to(dayjs(review.reply.updated_at))}
                           </span>
                         </div>
-                        <div>hello</div>
+                        <div>{review.reply.content}</div>
                       </div>
                     )}
                   </div>

@@ -28,7 +28,7 @@ export default function Layout({ children }) {
               {session ? (
                 <li className="relative dropdown">
                   <Link href="/settings">
-                    <a className="block h-16 items-center px-4">{session.user.first_name}</a>
+                    <a className="block h-16 items-center px-4">{session?.user?.first_name}</a>
                   </Link>
                   <div className="dropdown-menu">
                     <ul>
@@ -37,7 +37,7 @@ export default function Layout({ children }) {
                           <a className="px-6 py-3 block cursor-pointer">My Companies</a>
                         </Link>
                       </li>
-                      {session.user.role && (
+                      {session?.user?.role && (
                         <li>
                           <Link href="/admin">
                             <a className="px-6 py-3 block cursor-pointer">Admin</a>

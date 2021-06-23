@@ -1,8 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import BusinessSelector from '../../../slices/business/selector';
-import StarRating from '../../common/StarRating';
+import Spinner from 'components/common/Spinner';
+import BusinessSelector from 'slices/business/selector';
+import StarRating from 'components/common/StarRating';
 
 const Overall = () => {
   const currentCompany = useSelector(BusinessSelector.selectCurrentCompany);
@@ -25,7 +26,9 @@ const Overall = () => {
   return (
     <div>
       {isLoading ? (
-        <div className="h-40"></div>
+        <div className="flex justify-center items-center h-24">
+          <Spinner />
+        </div>
       ) : (
         <>
           {data !== null && (

@@ -36,10 +36,6 @@ const Settings = () => {
                   <div className="text-gray-500">Edit your public details.</div>
                 </a>
               </Link>
-              <a className="block hover:bg-gray-100 p-2">
-                <div className="font-semibold">Profile Page</div>
-                <div className="text-gray-500">Edit your public details.</div>
-              </a>
               <Link href="/business/settings/categories">
                 <div className="block hover:bg-gray-100 p-2 cursor-pointer">
                   <div className="font-semibold">Categories</div>

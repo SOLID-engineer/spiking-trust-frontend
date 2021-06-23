@@ -1,23 +1,32 @@
 import axios from 'axios';
 import StarRating from 'components/common/StarRating';
 import React, { useEffect, useState } from 'react';
+import Spinner from 'components/common/Spinner';
 
 const Card = ({ uuid, onRemove }) => {
   const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.get(`/companies/${uuid}/info`);
         setData(response.data);
       } catch (error) {}
+      setIsLoading(false);
     };
     getData();
   }, []);
 
   return (
     <div className="bg-white p-4 w-72 border text-sm relative mr-4">
-      {data !== null && (
+      {isLoading && (
+        <div className="flex justify-center items-center h-72">
+          <Spinner />
+        </div>
+      )}
+      {!isLoading && data !== null && (
         <>
           <button
             type="button"
