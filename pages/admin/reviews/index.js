@@ -10,9 +10,11 @@ import StarRating from 'components/common/StarRating';
 import Paginate from 'components/admin/paginate';
 
 import { getSession } from 'next-auth/client';
+import router from 'next/router';
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
+  const { query } = context;
   if (!session) {
     return {
       redirect: {
@@ -21,12 +23,17 @@ export const getServerSideProps = async (context) => {
       },
     };
   }
-  return { props: {} };
+  return { props: { query } };
 };
 
-const ReviewAdmin = () => {
+const ReviewAdmin = ({ query }) => {
   const [reviews, setReviews] = useState([]);
-  const [pages, setPages] = useState([]);
+  const [pages, setPages] = useState({
+    current_page: query?.page || 1,
+    last_page: 0,
+    total: 0,
+    per_page: 20,
+  });
 
   const getReviews = async (params = {}) => {
     const response = await axios.get('/admin/reviews', { params });
@@ -40,8 +47,9 @@ const ReviewAdmin = () => {
     });
   };
 
-  const changePage = () => {
-    getReviews({ page: pages.current_page + 1 });
+  const changePage = ({ page }) => {
+    router.push({ pathname: '/admin/reviews' }, { query: { ...query, page } }, { shallow: true });
+    getReviews({ ...query, page });
   };
 
   const removeRecord = async (id) => {
@@ -58,7 +66,7 @@ const ReviewAdmin = () => {
   };
 
   useEffect(() => {
-    getReviews();
+    getReviews({ ...query, page: pages.current_page });
   }, []);
 
   return (
@@ -102,7 +110,7 @@ const ReviewAdmin = () => {
                         <span className="pl-5 py-2">{review.company?.name || '---'}</span>
                         <a
                           target="_blank"
-                          href={`https://${review.company?.name}`}
+                          href={`https://${review.company?.domain}`}
                           className="pl-5 text-blue-500"
                           rel="noreferrer"
                         >
@@ -112,8 +120,10 @@ const ReviewAdmin = () => {
                     </td>
                     <td className="cursor-pointer">
                       <div className="items-center">
-                        <p className="pl-5">{review.claimed_at || ' --- '}</p>
-                        <p className="pl-5">{review.claimed_by || ' --- '}</p>
+                        <p className="pl-5">
+                          {review.author?.first_name || ' --- '}{' '}
+                          {review.author?.last_name || ' --- '}
+                        </p>
                       </div>
                     </td>
                     <td className="cursor-pointer">
@@ -133,14 +143,16 @@ const ReviewAdmin = () => {
 
                     <td className="cursor-pointer">
                       <div className="flex items-center">
-                        <p className="pl-5">{dayjs(review.created_at).format('H:ss MM/DD/YYYY')}</p>
+                        <p className="pl-5">
+                          {dayjs(review.created_at).format('H:mm:ss MM/DD/YYYY')}
+                        </p>
                       </div>
                     </td>
                     <td>
                       <div className="flex ml-5">
                         <Link href={`/admin/reviews/edit/${review.id}`}>
                           <p
-                            className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6"
+                            className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6 cursor-pointer"
                             title="Edit details"
                           >
                             <span className="text-xs">
@@ -149,7 +161,7 @@ const ReviewAdmin = () => {
                           </p>
                         </Link>
                         <button
-                          className="btn btn-sm btn-clean btn-icon mr-2  h-6 w-6"
+                          className="btn btn-sm btn-clean btn-icon mr-2 cursor-pointer h-6 w-6"
                           title="Detele details"
                           onClick={() => removeRecord(review.id)}
                         >
@@ -169,7 +181,7 @@ const ReviewAdmin = () => {
               <Paginate
                 currentPage={pages.current_page}
                 lastPage={pages.last_page}
-                onClick={changePage}
+                changePage={changePage}
                 total={pages.total}
               />
             </div>

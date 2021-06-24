@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from 'components/admin';
-import Link from 'next/link';
 
 import axios from 'axios';
-import TrashIcon from 'components/icons/trash';
 import dayjs from 'dayjs';
-import StarRating from 'components/common/StarRating';
 import Paginate from 'components/admin/paginate';
 
 import { getSession } from 'next-auth/client';
+import router from 'next/router';
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
+  const { query } = context;
   if (!session) {
     return {
       redirect: {
@@ -20,12 +19,17 @@ export const getServerSideProps = async (context) => {
       },
     };
   }
-  return { props: {} };
+  return { props: { query } };
 };
 
-const AdminUsers = () => {
+const AdminUsers = ({ query }) => {
   const [users, setUsers] = useState([]);
-  const [pages, setPages] = useState([]);
+  const [pages, setPages] = useState({
+    current_page: query?.page || 1,
+    last_page: 0,
+    total: 0,
+    per_page: 20,
+  });
 
   const getUsers = async (params = {}) => {
     const response = await axios.get('/admin/users', { params });
@@ -39,8 +43,9 @@ const AdminUsers = () => {
     });
   };
 
-  const changePage = () => {
-    getUsers({ page: pages.current_page + 1 });
+  const changePage = ({ page }) => {
+    router.push({ pathname: '/admin/users' }, { query: { ...query, page } }, { shallow: true });
+    getUsers({ ...query, page });
   };
 
   const lockUser = async (id) => {
@@ -57,7 +62,7 @@ const AdminUsers = () => {
   };
 
   useEffect(() => {
-    getUsers();
+    getUsers({ ...query, page: pages.current_page, prePage: 10 });
   }, []);
 
   return (
@@ -115,18 +120,18 @@ const AdminUsers = () => {
                     <td className="cursor-pointer py-2">
                       <div className="flex items-center">
                         {user.companies && user.companies.length > 0
-                          ? user.companies?.map((comapny) => {
+                          ? user.companies?.map((company) => {
                               return (
-                                <div className="mb-2 pl-5">
-                                  <p>{comapny.name}</p>
-                                  <p>
+                                <div className="mb-2">
+                                  <p>{company.name}</p>
+                                  <p className="mt-2">
                                     <a
-                                      className="text-blue-300 px-3"
+                                      className="text-blue-300 "
                                       target="_blank"
-                                      href={`https://${company.domain}`}
+                                      href={`https://${company?.domain}`}
                                       rel="noreferrer"
                                     >
-                                      {company.domain}
+                                      {company?.domain || '---'}
                                     </a>
                                   </p>
                                 </div>
@@ -145,7 +150,7 @@ const AdminUsers = () => {
               <Paginate
                 currentPage={pages.current_page}
                 lastPage={pages.last_page}
-                onClick={changePage}
+                changePage={changePage}
                 total={pages.total}
               />
             </div>

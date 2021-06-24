@@ -1,11 +1,12 @@
 import React from 'react';
 
-export default function Paginate({ currentPage = 1, lastPage = 0, ...props }) {
+export default function Paginate({ currentPage = 1, lastPage = 0, changePage, ...props }) {
   const pagesDisplayed = 3;
   const renderPage = (page) => {
     return (
       <div
         {...props}
+        onClick={() => changePage({ page })}
         key={page}
         className={`w-8 md:flex justify-center items-center hidden
             cursor-pointer leading-5 transition duration-150 ease-in

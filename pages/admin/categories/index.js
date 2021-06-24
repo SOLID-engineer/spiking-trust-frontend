@@ -48,8 +48,6 @@ const Business = () => {
     getCategories();
   }, []);
 
-  console.log('categories', categories);
-
   return (
     <AdminLayout pageTitle="Categories">
       <div className="w-full sm:px-6">
@@ -102,7 +100,7 @@ const Business = () => {
                       <div className="flex pl-5">
                         <Link href={`/admin/categories/edit/${category.id}`}>
                           <p
-                            className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6"
+                            className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6 cursor-pointer"
                             title="Edit details"
                           >
                             <span className="text-xs">
@@ -111,7 +109,7 @@ const Business = () => {
                           </p>
                         </Link>
                         <button
-                          className="btn btn-sm btn-clean btn-icon mr-2  h-6 w-6"
+                          className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6 cursor-pointer"
                           title="Detele details"
                           onClick={() => removeRecord(category.id)}
                         >
