@@ -55,6 +55,7 @@ export default function Edit({ category_id }) {
     const response = await axios.get('/admin/categories', {
       params: {
         level: 2,
+        category_id,
       },
     });
     const { data = [] } = response;

@@ -28,10 +28,11 @@ export default function AdminTemplateEdit({ template_id }) {
   const handleSubmit = async (values) => {
     try {
       const response = await axios.put(`/admin/mail-templates/${template_id}`, {
-        title: values.title,
+        subject: values.subject,
         content: values.content,
         type: values.type,
         name: values.name,
+        is_primary: values.is_primary,
       });
       const { data } = response;
 
@@ -41,8 +42,11 @@ export default function AdminTemplateEdit({ template_id }) {
 
   const formik = useFormik({
     initialValues: {
-      title: '',
+      subject: '',
       content: '',
+      type: '',
+      name: '',
+      is_primary: false,
     },
     onSubmit: handleSubmit,
   });
@@ -53,8 +57,9 @@ export default function AdminTemplateEdit({ template_id }) {
     formik.setValues({
       name: data.name,
       content: data.content,
-      title: data.title,
+      subject: data.subject,
       type: data.type,
+      is_primary: data.is_primary,
     });
   };
 
@@ -88,21 +93,21 @@ export default function AdminTemplateEdit({ template_id }) {
 
             <div className="md:w-full px-3 mb-6 md:mb-0">
               <label className="block tracking-wide text-grey-darker text-xs font-bold mb-2">
-                Title
+                Subject
               </label>
               <input
                 className="appearance-none block w-full bg-grey-lighter text-xs text-grey-darker border border-red rounded p-2 mb-3"
                 type="text"
-                name="title"
+                name="subject"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.title}
+                value={formik.values.subject}
               />
             </div>
 
             <div className="md:w-full px-3 mb-6">
               <label className="block tracking-wide text-grey-darker text-xs font-bold mb-2">
-                Parent Category
+                Type mail
               </label>
               <div className="relative">
                 <select
@@ -112,14 +117,32 @@ export default function AdminTemplateEdit({ template_id }) {
                   value={formik.values.type}
                   className="block appearance-none w-full bg-grey-lighter text-xs border border-grey-lighter text-grey-darker p-2 pr-8 rounded"
                 >
-                  <option value="">Select parent category...</option>
+                  <option value="">Select type mail...</option>
                   {Object.entries(TEMPLATE_TYPE).map((item) => {
                     const key = item[0];
                     const value = item[1];
-                    return <option value={key}>{value}</option>;
+                    return (
+                      <option key={key} value={key}>
+                        {value}
+                      </option>
+                    );
                   })}
                 </select>
               </div>
+            </div>
+
+            <div className="md:w-full px-3 mb-6">
+              <label className="block tracking-wide text-grey-darker text-xs font-bold mb-2 flex">
+                <div className="relative mr-2">
+                  <input
+                    type="checkbox"
+                    name="is_primary"
+                    checked={formik.values.is_primary}
+                    onChange={() => formik.setFieldValue('is_primary', !formik.values.is_primary)}
+                  />
+                </div>
+                <span>Primary</span>
+              </label>
             </div>
 
             <div className="md:w-full px-3 mb-6 md:mb-0">

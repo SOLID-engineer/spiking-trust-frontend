@@ -8,9 +8,12 @@ import TrashIcon from 'components/icons/trash';
 
 import { getSession } from 'next-auth/client';
 import Paginate from 'components/admin/paginate';
+import router from 'next/router';
+import dayjs from 'dayjs';
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
+  const { query } = context;
   if (!session) {
     return {
       redirect: {
@@ -19,15 +22,20 @@ export const getServerSideProps = async (context) => {
       },
     };
   }
-  return { props: {} };
+  return { props: { query } };
 };
 
-const CompanyAdmin = () => {
+const CompanyAdmin = ({ query }) => {
   const [companies, setCompanies] = useState([]);
-  const [pages, setPages] = useState([]);
+  const [pages, setPages] = useState({
+    current_page: query?.page || 1,
+    last_page: 0,
+    total: 0,
+    per_page: 20,
+  });
 
-  const getCompanies = async () => {
-    const response = await axios.get('/admin/companies', {});
+  const getCompanies = async (params) => {
+    const response = await axios.get('/admin/companies', { params });
     const { data = [] } = response;
     setCompanies(data.items);
     setPages({
@@ -38,25 +46,13 @@ const CompanyAdmin = () => {
     });
   };
 
-  const removeRecord = async (id) => {
-    try {
-      const confirm = window.confirm('Are you sure delete record?');
-      if (!confirm) return;
-      const response = await axios.delete(`/admin/categories/${id}`);
-      const { msg = 'Deleted record success.' } = response;
-      alert(msg);
-      getCategories();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const changePage = () => {
-    getCompanies({ page: pages.current_page + 1 });
+  const changePage = ({ page }) => {
+    router.push({ pathname: '/admin/companies' }, { query: { ...query, page } }, { shallow: true });
+    getCompanies({ ...query, page });
   };
 
   useEffect(() => {
-    getCompanies();
+    getCompanies({ ...query, page: pages.current_page });
   }, []);
 
   return (
@@ -74,7 +70,7 @@ const CompanyAdmin = () => {
         </div>
         <div className="bg-white pb-5 overflow-y-auto">
           <p className="font-bold text-xs pt-5 px-4">
-            {companies.length}/{pages.total || 0} reviews
+            {companies.length}/{pages.total || 0} companies
           </p>
           <table className="w-full whitespace-nowrap my-4">
             <thead>
@@ -110,13 +106,18 @@ const CompanyAdmin = () => {
                     </td>
                     <td className="cursor-pointer">
                       <div className="items-center">
-                        <p className="pl-5">{company.claimed_at || ' --- '}</p>
-                        <p className="pl-5">{company.claimed_by || ' --- '}</p>
+                        <p className="pl-5">
+                          {company.claimed_at
+                            ? dayjs(company.claimed_at).format('H:m:ss MM/DD/YYYY')
+                            : ' --- '}
+                        </p>
                       </div>
                     </td>
                     <td className="cursor-pointer">
                       <div className="flex items-center">
-                        <div className="pl-5">{company.created_at}</div>
+                        <div className="pl-5">
+                          {dayjs(company.created_at).format('H:m:ss MM/DD/YYYY') || ' --- '}
+                        </div>
                       </div>
                     </td>
                     <td>
@@ -152,7 +153,7 @@ const CompanyAdmin = () => {
               <Paginate
                 currentPage={pages.current_page}
                 lastPage={pages.last_page}
-                onClick={changePage}
+                changePage={changePage}
                 total={pages.total}
               />
             </div>

@@ -7,9 +7,12 @@ import axios from 'axios';
 import EditIcon from 'components/icons/edit';
 import TrashIcon from 'components/icons/trash';
 import Paginate from 'components/admin/paginate';
+import { TEMPLATE_TYPE } from 'contants/template';
+import router from 'next/router';
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
+  const { query } = context;
   if (!session) {
     return {
       redirect: {
@@ -18,15 +21,20 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  return { props: {} };
+  return { props: { query } };
 }
 
-export default function Edit({ ...props }) {
+export default function Edit({ query }) {
   const [templates, setTemplates] = useState([]);
-  const [pages, setPages] = useState([]);
+  const [pages, setPages] = useState({
+    current_page: query?.page || 1,
+    last_page: 0,
+    total: 0,
+    per_page: 20,
+  });
 
-  const getTemplates = async () => {
-    const response = await axios.get('/admin/mail-templates', {});
+  const getTemplates = async (params) => {
+    const response = await axios.get('/admin/mail-templates', { params });
     const { data = [] } = response;
     setTemplates(data.items);
     setPages({
@@ -50,12 +58,17 @@ export default function Edit({ ...props }) {
     }
   };
 
-  const changePage = () => {
-    getTemplates({ page: pages.current_page + 1 });
+  const changePage = ({ page }) => {
+    router.push(
+      { pathname: '/admin/mail-templates' },
+      { query: { ...query, page } },
+      { shallow: true }
+    );
+    getTemplates({ ...query, page });
   };
 
   useEffect(() => {
-    getTemplates();
+    getTemplates({ ...query, page: pages.current_page });
   }, []);
 
   return (
@@ -86,8 +99,9 @@ export default function Edit({ ...props }) {
             <thead>
               <tr className="w-full text-xs leading-none uppercase font-bold">
                 <th className="p-5 text-left">Name</th>
-                <th className="p-5 text-left">Title</th>
+                <th className="p-5 text-left">Subject</th>
                 <th className="p-5 text-left">Type</th>
+                <th className="p-5 text-left">Primary</th>
                 <th className="p-5 text-left w-28">Actions</th>
               </tr>
             </thead>
@@ -105,12 +119,19 @@ export default function Edit({ ...props }) {
                     </td>
                     <td className="cursor-pointer">
                       <div className="flex items-center">
-                        <div className="pl-5">{template.title}</div>
+                        <div className="pl-5">{template.subject}</div>
                       </div>
                     </td>
                     <td className="cursor-pointer">
                       <div className="flex items-center">
-                        <div className="pl-5">{template.type}</div>
+                        <div className="pl-5">{TEMPLATE_TYPE[template.type]}</div>
+                      </div>
+                    </td>
+                    <td className="cursor-pointer">
+                      <div className="flex items-center">
+                        <div className="pl-5">
+                          {template.is_primary ? 'Primary' : ' Not Primary'}
+                        </div>
                       </div>
                     </td>
                     <td>
@@ -146,7 +167,7 @@ export default function Edit({ ...props }) {
               <Paginate
                 currentPage={pages.current_page}
                 lastPage={pages.last_page}
-                onClick={changePage}
+                changePage={changePage}
                 total={pages.total}
               />
             </div>
