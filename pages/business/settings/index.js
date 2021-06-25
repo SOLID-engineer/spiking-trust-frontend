@@ -2,9 +2,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import { getSession } from 'next-auth/client';
-
 import BusinessSelector from 'slices/business/selector';
 import BusinessLayout from 'components/business-layout';
+import withCompany from 'components/hocs/withCompany';
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
@@ -50,4 +50,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default withCompany(Settings);

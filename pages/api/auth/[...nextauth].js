@@ -4,6 +4,7 @@ import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
 
 const options = {
+  site: process.env.NEXTAUTH_URL,
   providers: [
     Providers.Credentials({
       id: 'credentials-facebook',
@@ -26,6 +27,13 @@ const options = {
       },
     }),
   ],
+  secret: process.env.SECRET,
+  session: {
+    jwt: true,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
+  jwt: {},
   callbacks: {
     async session(session, data) {
       session.accessToken = data.accessToken;
@@ -40,12 +48,7 @@ const options = {
       return token;
     },
   },
-  session: {
-    jwt: true,
-    // maxAge: 30 * 24 * 60 * 60, // 30 days
-    // updateAge: 24 * 60 * 60, // 24 hours
-  },
-  debug: false,
+  debug: true,
 };
 
 export default (req, res) => NextAuth(req, res, options);

@@ -2,6 +2,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import axios from 'axios';
 import BusinessLayout from 'components/business-layout';
+import withCompany from 'components/hocs/withCompany';
 import { debounce, isEmpty } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
@@ -147,4 +148,4 @@ const Benchmark = () => {
   );
 };
 
-export default Benchmark;
+export default withCompany(Benchmark);

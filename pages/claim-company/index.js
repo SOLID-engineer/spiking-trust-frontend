@@ -48,7 +48,7 @@ const ClaimCompany = () => {
         ),
       email: Yup.string()
         .required('Please enter email address.')
-        .matches(/^[a-zA-Z0-9._-]+$/, 'The domain is not valid.'),
+        .matches(/^[a-zA-Z0-9._-]+$/, 'The email is not valid.'),
     }),
     onSubmit: handleSubmit,
   });

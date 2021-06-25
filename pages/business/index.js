@@ -7,6 +7,7 @@ import Engage from 'components/business/dashboard/Engage';
 import Overall from 'components/business/dashboard/Overall';
 import ReviewStatistics from 'components/business/dashboard/ReviewStatistics';
 import BusinessSelector from 'slices/business/selector';
+import withCompany from 'components/hocs/withCompany';
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
@@ -23,7 +24,6 @@ export const getServerSideProps = async (context) => {
 
 const Business = () => {
   const currentCompany = useSelector(BusinessSelector.selectCurrentCompany);
-
   return (
     <BusinessLayout pageTitle="Dashboard">
       {currentCompany !== null && (
@@ -61,4 +61,4 @@ const Business = () => {
   );
 };
 
-export default Business;
+export default withCompany(Business);

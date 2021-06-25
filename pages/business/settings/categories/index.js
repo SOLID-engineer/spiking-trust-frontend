@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import BusinessSelector from 'slices/business/selector';
 import BusinessLayout from 'components/business-layout';
-import { isEmpty } from 'lodash';
+import withCompany from 'components/hocs/withCompany';
 
 const CategoryBusiness = () => {
   const [categories, setCategories] = useState([]);
@@ -135,4 +135,4 @@ const CategoryBusiness = () => {
   );
 };
 
-export default CategoryBusiness;
+export default withCompany(CategoryBusiness);

@@ -17,6 +17,7 @@ button:disabled {
     & > a {
       @apply block h-16 flex items-center px-4;
     }
+
     &:hover {
       & > a {
         @apply bg-indigo-700;
@@ -28,9 +29,46 @@ button:disabled {
     .dropdown-menu {
       @apply absolute bg-indigo-700 top-full right-0 w-60 hidden;
     }
+
     &:hover {
       .dropdown-menu {
         @apply block;
+      }
+    }
+  }
+}
+
+.ck-editor__editable_inline {
+  min-height: 400px;
+}
+
+ol.invitation-progress {
+  @apply flex flex-row gap-8 mb-4;
+
+  & > li {
+    @apply flex flex-row items-center space-x-2 ;
+
+    .step {
+      @apply rounded-full border-2 bg-white block w-6 leading-6 text-center h-6 text-sm box-content border-gray-600 flex-none;
+    }
+
+    .label {
+      @apply text-gray-500;
+    }
+
+    &.current {
+      .step {
+        @apply border-blue-600 font-semibold;
+      }
+
+      .label {
+        @apply text-gray-900 font-semibold;
+      }
+    }
+
+    &.done {
+      .step {
+        @apply border-blue-600 bg-blue-600 text-white;
       }
     }
   }

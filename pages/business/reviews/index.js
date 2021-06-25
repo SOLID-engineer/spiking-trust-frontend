@@ -10,6 +10,7 @@ import BusinessSelector from 'slices/business/selector';
 import { getSession } from 'next-auth/client';
 import Spinner from 'components/common/Spinner';
 
+import withCompany from 'components/hocs/withCompany';
 import FilterStars from './FilterStars';
 import FilterReply from './FilterReply';
 import FilterSearch from './FilterSearch';
@@ -315,4 +316,4 @@ const Reviews = () => {
   );
 };
 
-export default Reviews;
+export default withCompany(Reviews);

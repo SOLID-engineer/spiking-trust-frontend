@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import { Provider } from 'react-redux';
 import { getSession, Provider as AuthProvider, signOut, useSession } from 'next-auth/client';
-
 import store from 'slices/store';
 import { reset } from 'slices/session';
 import 'styles/tailwind.css';
@@ -12,6 +11,8 @@ import 'styles/global.scss';
 const TIMEOUT = 1 * 30 * 1000;
 axios.defaults.timeout = TIMEOUT;
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+console.log('🚀 ~ file: _app.js ~ line 15 ~ process.env', process.env.NEXTAUTH_URL);
 
 axios.interceptors.response.use(
   (response) => response,

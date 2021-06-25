@@ -7,6 +7,7 @@ import { useFormik } from 'formik';
 import BusinessSelector from 'slices/business/selector';
 import BusinessLayout from 'components/business-layout';
 import { getSession } from 'next-auth/client';
+import withCompany from 'components/hocs/withCompany';
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
@@ -302,4 +303,4 @@ const Information = () => {
   );
 };
 
-export default Information;
+export default withCompany(Information);
