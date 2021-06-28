@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import axios from 'axios';
 import BusinessLayout from 'components/business-layout';
+import SelectTemplateModal from 'components/business/invitations/invite-customers/upload-service-reviews/SelectTemplateModal';
 import Spinner from 'components/common/Spinner';
 import withCompany from 'components/hocs/withCompany';
 import { useFormik } from 'formik';
@@ -10,9 +11,7 @@ import React, { useEffect, useState } from 'react';
 import { readString } from 'react-papaparse';
 import { useSelector } from 'react-redux';
 import BusinessSelector from 'slices/business/selector';
-import toast from 'utils/toast';
 import * as Yup from 'yup';
-import SelectTemplateModal from './SelectTemplateModal';
 
 const schema = Yup.object().shape({
   consumerEmail: Yup.string().required().email(),
