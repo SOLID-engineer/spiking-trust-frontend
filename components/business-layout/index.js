@@ -1,15 +1,20 @@
 import Dropdown from 'components/common/Dropdown';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCompany } from '../../slices/business';
-import BusinessSelector from '../../slices/business/selector';
+import { selectCompany } from 'slices/business';
+import BusinessSelector from 'slices/business/selector';
+import { useRouter } from 'next/router';
+import { startsWith } from 'lodash';
 import Header from './Header';
 
 const BusinessLayout = ({ pageTitle, headerBottom = null, children }) => {
+  const router = useRouter();
+  console.log('🚀 ~ file: index.js ~ line 12 ~ BusinessLayout ~ router', router.asPath);
   const companies = useSelector(BusinessSelector.selectCompanies);
   const currentCompany = useSelector(BusinessSelector.selectCurrentCompany);
   const dispatch = useDispatch();
+  const [activeMenu, setActiveMenu] = useState(null);
 
   return (
     <div className="flex flex-row bg-gray-200 transform">
@@ -39,7 +44,7 @@ const BusinessLayout = ({ pageTitle, headerBottom = null, children }) => {
                     </div>
                   }
                   dropdown={
-                    <div className="absolute w-full inset-x-0 text-gray-800 px-2">
+                    <div className="absolute w-full inset-x-0 text-gray-800 px-2 z-30">
                       <div className="bg-white p-2 shadow">
                         {companies !== null &&
                           companies.map((company) => (
@@ -61,19 +66,33 @@ const BusinessLayout = ({ pageTitle, headerBottom = null, children }) => {
               </>
             )}
           </div>
-          <ul className="pb-2 mb-2 border-b border-gray-700 space-y-1">
-            <li>
+          <ul className="pb-2 mb-2 border-b border-gray-700 space-y-1 aside-menu">
+            <li className={router.asPath === '/business' ? 'active' : ''}>
               <Link href="/business">
                 <a className="px-6 py-2 block font-semibold hover:bg-gray-700">Home</a>
               </Link>
             </li>
-            <li>
+            <li className={router.asPath === '/business/reviews' ? 'active' : ''}>
               <Link href="/business/reviews">
                 <a className="px-6 py-2 block font-semibold hover:bg-gray-700">Reviews</a>
               </Link>
             </li>
-            <li>
-              <a className="px-6 py-2 font-semibold hover:bg-gray-700 flex flex-row justify-between items-center">
+            <li
+              className={`${startsWith(router.asPath, '/business/invitations') ? 'active' : ''} ${
+                activeMenu === 'menu-invitations' ||
+                (activeMenu === null && startsWith(router.asPath, '/business/invitations'))
+                  ? 'current'
+                  : ''
+              }`}
+            >
+              <a
+                className="px-6 py-2 font-semibold hover:bg-gray-700 flex flex-row justify-between items-center"
+                role="button"
+                aria-hidden="true"
+                onClick={() => {
+                  setActiveMenu('menu-invitations');
+                }}
+              >
                 <span>Get Reviews</span>
                 <span className="block h-5 w-5">
                   <svg
@@ -90,21 +109,42 @@ const BusinessLayout = ({ pageTitle, headerBottom = null, children }) => {
                   </svg>
                 </span>
               </a>
-              <ul>
-                <li>
+              <ul className="sub-menu">
+                <li className={router.asPath === '/business/invitations' ? 'active' : ''}>
                   <Link href="/business/invitations">
                     <a className="px-6 py-2 block hover:bg-gray-700 text-sm">Overview</a>
                   </Link>
                 </li>
-                <li>
+                <li
+                  className={
+                    router.asPath ===
+                    '/business/invitations/invite-customers/upload-service-reviews'
+                      ? 'active'
+                      : ''
+                  }
+                >
                   <Link href="/business/invitations/invite-customers/upload-service-reviews">
                     <a className="px-6 py-2 block hover:bg-gray-700 text-sm">Invite Customers</a>
                   </Link>
                 </li>
               </ul>
             </li>
-            <li>
-              <a className="px-6 py-2 font-semibold hover:bg-gray-700 flex flex-row justify-between items-center">
+            <li
+              className={`${startsWith(router.asPath, '/business/analytics') ? 'active' : ''} ${
+                activeMenu === 'menu-analytics' ||
+                (activeMenu === null && startsWith(router.asPath, '/business/analytics'))
+                  ? 'current'
+                  : ''
+              }`}
+            >
+              <a
+                className="px-6 py-2 font-semibold hover:bg-gray-700 flex flex-row justify-between items-center"
+                role="button"
+                aria-hidden="true"
+                onClick={() => {
+                  setActiveMenu('menu-analytics');
+                }}
+              >
                 <span>Analytics</span>
                 <span className="block h-5 w-5">
                   <svg
@@ -121,13 +161,13 @@ const BusinessLayout = ({ pageTitle, headerBottom = null, children }) => {
                   </svg>
                 </span>
               </a>
-              <ul>
-                <li>
+              <ul className="sub-menu">
+                <li className={router.asPath === '/business/analytics/overview' ? 'active' : ''}>
                   <Link href="/business/analytics/overview">
                     <a className="px-6 py-2 block hover:bg-gray-700 text-sm">Overview</a>
                   </Link>
                 </li>
-                <li>
+                <li className={router.asPath === '/business/analytics/benchmark' ? 'active' : ''}>
                   <Link href="/business/analytics/benchmark">
                     <a className="px-6 py-2 block hover:bg-gray-700 text-sm">Benchmark</a>
                   </Link>
@@ -135,11 +175,11 @@ const BusinessLayout = ({ pageTitle, headerBottom = null, children }) => {
               </ul>
             </li>
           </ul>
-          <ul className="pb-2 space-y-1">
+          <ul className="pb-2 space-y-1 aside-menu">
             {/* <li>
               <a className="px-6 py-1 block font-semibold text-sm hover:bg-gray-700">Get Started</a>
             </li> */}
-            <li>
+            <li className={startsWith(router.asPath, '/business/settings') ? 'active' : ''}>
               <Link href="/business/settings">
                 <a className="px-6 py-1 block font-semibold text-sm hover:bg-gray-700">Settings</a>
               </Link>

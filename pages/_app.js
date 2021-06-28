@@ -7,6 +7,7 @@ import store from 'slices/store';
 import { reset } from 'slices/session';
 import 'styles/tailwind.css';
 import 'styles/global.scss';
+import ToastContainer from 'components/toast/ToastContainer';
 
 const TIMEOUT = 1 * 30 * 1000;
 axios.defaults.timeout = TIMEOUT;
@@ -38,7 +39,10 @@ function App({ Component, pageProps }) {
     <>
       <AuthProvider session={pageProps.session}>
         <Provider store={store}>
-          <Component {...pageProps} />
+          <>
+            <Component {...pageProps} />
+            <ToastContainer />
+          </>
         </Provider>
       </AuthProvider>
     </>

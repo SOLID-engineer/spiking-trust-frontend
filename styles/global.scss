@@ -46,7 +46,7 @@ ol.invitation-progress {
   @apply flex flex-row gap-8 mb-4;
 
   & > li {
-    @apply flex flex-row items-center space-x-2 ;
+    @apply flex flex-row items-center space-x-2;
 
     .step {
       @apply rounded-full border-2 bg-white block w-6 leading-6 text-center h-6 text-sm box-content border-gray-600 flex-none;
@@ -69,6 +69,44 @@ ol.invitation-progress {
     &.done {
       .step {
         @apply border-blue-600 bg-blue-600 text-white;
+      }
+    }
+  }
+}
+
+.aside-menu {
+  & > li {
+    @apply overflow-hidden;
+
+    .sub-menu {
+      @apply transition-opacity h-0 opacity-0 duration-500 space-y-0.5 py-0.5;
+
+      & > li {
+        &.active > a {
+          @apply bg-gray-700;
+        }
+      }
+    }
+
+    &.active {
+      & > a {
+        @apply bg-gray-700 relative;
+
+        &::before {
+          @apply absolute w-2 inset-y-0 left-0 bg-indigo-600 block;
+
+          content: '';
+        }
+      }
+    }
+
+    &.current {
+      & > a {
+        @apply bg-gray-700 relative;
+      }
+
+      .sub-menu {
+        @apply h-auto opacity-100;
       }
     }
   }
