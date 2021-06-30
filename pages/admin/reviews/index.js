@@ -59,7 +59,7 @@ const ReviewAdmin = ({ query }) => {
       const response = await axios.delete(`/admin/reviews/${id}`);
       const { msg = 'Deleted record success.' } = response;
       alert(msg);
-      getReviews();
+      getReviews({ ...query, page: pages.current_page });
     } catch (error) {
       console.log(error);
     }
@@ -74,10 +74,7 @@ const ReviewAdmin = ({ query }) => {
       <div className="w-full sm:px-6">
         <div className="p-4 bg-gray-100">
           <div className="sm:flex items-center justify-between">
-            <p
-              tabIndex={0}
-              className="focus:outline-none uppercase text-base sm:text-lg font-bold leading-normal text-gray-800"
-            >
+            <p className="focus:outline-none uppercase text-base sm:text-lg font-bold leading-normal text-gray-800">
               List reviews
             </p>
           </div>

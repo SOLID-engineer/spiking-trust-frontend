@@ -62,7 +62,7 @@ const AdminUsers = ({ query }) => {
   };
 
   useEffect(() => {
-    getUsers({ ...query, page: pages.current_page, prePage: 10 });
+    getUsers({ ...query, page: pages.current_page });
   }, []);
 
   return (

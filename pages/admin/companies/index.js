@@ -122,7 +122,7 @@ const CompanyAdmin = ({ query }) => {
                     </td>
                     <td>
                       <div className="flex ml-5">
-                        <Link href={`/admin/categories/edit/${company.id}`}>
+                        <Link href={`/admin/companies/edit/${company.id}`}>
                           <p
                             className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6"
                             title="Edit details"
@@ -132,15 +132,6 @@ const CompanyAdmin = ({ query }) => {
                             </span>
                           </p>
                         </Link>
-                        <button
-                          className="btn btn-sm btn-clean btn-icon mr-2  h-6 w-6"
-                          title="Detele details"
-                          onClick={() => removeRecord(company.id)}
-                        >
-                          <span className="text-xs text-red-400">
-                            <TrashIcon />
-                          </span>
-                        </button>
                       </div>
                     </td>
                   </tr>

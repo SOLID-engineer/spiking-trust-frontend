@@ -31,7 +31,7 @@ export default function AdminTemplateCreate() {
         content: values.content,
         type: values.type,
         name: values.name,
-        is_primary: values.is_primary,
+        is_default: values.is_default,
       });
       const { data } = response;
 
@@ -45,7 +45,7 @@ export default function AdminTemplateCreate() {
       type: '',
       name: '',
       content: '',
-      is_primary: false,
+      is_default: false,
     },
     onSubmit: handleSubmit,
   });
@@ -121,7 +121,7 @@ export default function AdminTemplateCreate() {
                 <div className="relative mr-2">
                   <input
                     type="checkbox"
-                    name="is_primary"
+                    name="is_default"
                     onChange={formik.handleChange}
                     value={1}
                   />

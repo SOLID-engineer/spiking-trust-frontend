@@ -28,7 +28,7 @@ export default function AdminReviewEdit({ review_id }) {
         content: values.content,
         rating: values.rating,
       });
-      router.push({ pathname: '/admin/reviews' }, undefined, { shallow: true });
+      router.back();
     } catch (error) {}
   };
 
@@ -56,7 +56,7 @@ export default function AdminReviewEdit({ review_id }) {
   }, []);
 
   return (
-    <AdminLayout pageTitle="Mail Configuration">
+    <AdminLayout pageTitle="Update Reviews">
       <div className="w-3/4 sm:px-6 mx-auto">
         <div className="bg-white shadow px-4 md:px-10 pt-4 md:pt-7 pb-5 overflow-y-auto rounded-md">
           <form onSubmit={formik.handleSubmit} className="md:flex flex-wrap -mx-3 mb-6">

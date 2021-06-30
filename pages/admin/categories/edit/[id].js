@@ -68,7 +68,7 @@ export default function Edit({ category_id }) {
   }, []);
 
   return (
-    <AdminLayout pageTitle="Create categories">
+    <AdminLayout pageTitle="Update categories">
       <div className="md:w-2/3 mx-auto sm:px-6">
         <div className="bg-white shadow px-4 md:px-10 pt-4 md:pt-7 pb-5 overflow-y-auto rounded-md">
           <form onSubmit={formik.handleSubmit} className="md:flex flex-wrap -mx-3 mb-6">
