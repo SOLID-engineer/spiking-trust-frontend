@@ -8,6 +8,7 @@ import BusinessSelector from 'slices/business/selector';
 import BusinessLayout from 'components/business-layout';
 import { getSession } from 'next-auth/client';
 import withCompany from 'components/hocs/withCompany';
+import toast from 'utils/toast';
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
@@ -51,6 +52,7 @@ const Information = () => {
         companyWebsite: response.data.domain,
         description: response.data.description,
       });
+      toast.success('Saved Successfully!');
     } catch (error) {}
   };
 
@@ -74,6 +76,7 @@ const Information = () => {
         city: response.data.city,
         country: response.data.country,
       });
+      toast.success('Saved Successfully!');
     } catch (error) {}
   };
 
