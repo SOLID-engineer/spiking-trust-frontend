@@ -1,4 +1,5 @@
 import BusinessLayout from 'components/business-layout';
+import withCompany from 'components/hocs/withCompany';
 import React from 'react';
 
 const Overview = () => (
@@ -7,4 +8,4 @@ const Overview = () => (
   </BusinessLayout>
 );
 
-export default Overview;
+export default withCompany(Overview);
