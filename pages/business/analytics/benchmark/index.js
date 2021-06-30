@@ -9,7 +9,7 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { useSelector } from 'react-redux';
 import BusinessSelector from 'slices/business/selector';
 
-import Card from './Card';
+import Card from 'components/business/analytics/benchmark/Card';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -85,39 +85,8 @@ const Benchmark = () => {
 
   return (
     <BusinessLayout pageTitle="Benchmark">
-      <div className="flex flex-row overflow-x-auto pb-6 h-full ">
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable direction="horizontal" droppableId="droppable">
-            {(provided, snapshot) => (
-              <div
-                className="grid grid-flow-col"
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
-                {data.map((item, index) => (
-                  <Draggable key={item.company_uuid} draggableId={item.company_uuid} index={index}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <Card
-                          key={item.company_uuid}
-                          uuid={item.company_uuid}
-                          onRemove={handleRemoveCompany}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-
-        <div className="relative">
+      <div>
+        <div className="relative mb-4">
           <input
             type="text"
             className="bg-white px-6 py-4 border text-blue-500 hover:border-blue-500 flex-none"
@@ -126,7 +95,7 @@ const Benchmark = () => {
             onChange={onQueryChange}
           />
           {query.length > 1 && (
-            <div className="absolute w-full bg-white shadow">
+            <div className="absolute w-80 bg-white shadow z-30">
               {!isEmpty(suggestions?.companies) &&
                 suggestions.companies.map((company) => (
                   <button
@@ -142,6 +111,42 @@ const Benchmark = () => {
                 ))}
             </div>
           )}
+        </div>
+        <div className="flex flex-row overflow-x-auto pb-6">
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable direction="horizontal" droppableId="droppable">
+              {(provided, snapshot) => (
+                <div
+                  className="grid grid-flow-col"
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {data.map((item, index) => (
+                    <Draggable
+                      key={item.company_uuid}
+                      draggableId={item.company_uuid}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <Card
+                            key={item.company_uuid}
+                            uuid={item.company_uuid}
+                            onRemove={handleRemoveCompany}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
         </div>
       </div>
     </BusinessLayout>

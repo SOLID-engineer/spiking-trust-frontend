@@ -12,6 +12,7 @@ import { readString } from 'react-papaparse';
 import { useSelector } from 'react-redux';
 import BusinessSelector from 'slices/business/selector';
 import * as Yup from 'yup';
+import Link from 'next/link';
 
 const schema = Yup.object().shape({
   consumerEmail: Yup.string().required().email(),
@@ -537,7 +538,7 @@ const UploadServiceReviews = () => {
                   <Spinner />
                 </div>
                 <div className="text-center">
-                  Please don't close the browser window or click the back button
+                  Please don&apos;t close the browser window or click the back button
                 </div>
               </div>
             </div>
@@ -550,7 +551,11 @@ const UploadServiceReviews = () => {
                   We’ll be sending your invitations shortly
                 </h2>
                 <div className="mb-4">
-                  You can always check the status of your invitations in invitation history.
+                  You can always check the status of your invitations in{' '}
+                  <Link href="/business/invitations/invitation-history">
+                    <a className="text-blue-600">invitation history</a>
+                  </Link>
+                  .
                 </div>
                 <div>
                   <button

@@ -9,7 +9,7 @@ const RecentReviews = ({ reviews }) => {
   return (
     <div className="py-10 px-4">
       <div className="text-center font-semibold text-xl mb-8">Recent reviews</div>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
         {reviews.map((review) => (
           <div key={review.id} className="w-full text-sm">
             <div className="p-4 bg-white h-48 overflow-y-auto">

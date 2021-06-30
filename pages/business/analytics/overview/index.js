@@ -3,7 +3,7 @@ import React from 'react';
 
 const Overview = () => (
   <BusinessLayout pageTitle="Overview">
-    <div>hello</div>
+    <div></div>
   </BusinessLayout>
 );
 

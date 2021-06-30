@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function SearchIcon() {
   return (
-    <div className="w-5">
+    <div className="w-4">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="trustpilot-icon"

@@ -34,10 +34,10 @@ const SearchForm = () => {
 
   return (
     <form onSubmit={onSubmit} className="relative">
-      <div className="flex flex-row bg-white p-2 w-full">
+      <div className="flex flex-row bg-gray-100 p-2 w-full">
         <div className="flex-grow">
           <input
-            className="text-lg focus:outline-none px-2 py-3 w-full"
+            className="text-lg focus:outline-none bg-gray-100 px-2 py-2 w-full"
             placeholder="Company or category"
             name="query"
             onChange={onQueryChange}
@@ -47,7 +47,8 @@ const SearchForm = () => {
         </div>
         <button
           type="submit"
-          className="text-lg focus:outline-none px-6 py-3 bg-indigo-600 text-white hover:bg-indigo-800"
+          className="text-lg focus:outline-none px-6 py-2 bg-indigo-600 text-white hover:bg-indigo-800"
+          style={{ backgroundColor: '#008df4' }}
         >
           Search
         </button>

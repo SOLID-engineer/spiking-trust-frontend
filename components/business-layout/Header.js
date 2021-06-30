@@ -4,7 +4,6 @@ import Dropdown from 'components/common/Dropdown';
 
 const Header = ({ pageTitle, headerBottom = null }) => {
   const [session, loading] = useSession();
-
   return (
     <div className="bg-white shadow-sm">
       <div className="h-14 flex flex-row justify-between items-center w-full px-6">
@@ -31,7 +30,7 @@ const Header = ({ pageTitle, headerBottom = null }) => {
             dropdown={
               <>
                 {session && (
-                  <div className="bg-white border absolute right-0 top-full w-56 mt-2 z-40">
+                  <div className="bg-white border absolute right-0 top-full w-56 mt-2 z-20">
                     <div className="p-4 border-b">
                       <div className="font-semibold">{session.user.first_name}</div>
                       <div className="text-gray-600 text-sm">{session.user.email}</div>

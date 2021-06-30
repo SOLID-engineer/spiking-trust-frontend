@@ -11,9 +11,9 @@ import { getSession } from 'next-auth/client';
 import Spinner from 'components/common/Spinner';
 
 import withCompany from 'components/hocs/withCompany';
-import FilterStars from './FilterStars';
-import FilterReply from './FilterReply';
-import FilterSearch from './FilterSearch';
+import FilterStars from 'components/business/reviews/FilterStars';
+import FilterReply from 'components/business/reviews/FilterReply';
+import FilterSearch from 'components/business/reviews/FilterSearch';
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
