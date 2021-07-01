@@ -27,7 +27,7 @@ const UploadServiceReviews = () => {
   const [data, setData] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [step, setStep] = useState(1);
-  const { CKEditor, ClassicEditor, isEditorLoaded } = useCKEditor();
+  const { CKEditor, isEditorLoaded } = useCKEditor();
   const [templates, setTemplates] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [isSelectTemplateModalVisible, setIsSelectTemplateModalVisible] = useState(false);
@@ -441,13 +441,18 @@ const UploadServiceReviews = () => {
                   {isEditorLoaded && (
                     <CKEditor
                       name="content"
-                      editor={ClassicEditor}
                       data={templateForm.values.content}
-                      config={{ fullPage: true, allowedContent: true }}
-                      onChange={(event, editor) => {
-                        const editorData = editor.getData();
+                      config={{
+                        fullPage: true,
+                        allowedContent: true,
+                        readOnly: true,
+                        height: '500px',
+                      }}
+                      onChange={(event) => {
+                        const editorData = event.editor.getData();
                         templateForm.setFieldValue('content', editorData);
                       }}
+                      readOnly
                       disabled
                     />
                   )}
