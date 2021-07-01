@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import AdminLayout from 'components/admin';
 import { TEMPLATE_TYPE } from 'contants/template';
 import { useFormik } from 'formik';
 import axios from 'axios';
 import router from 'next/router';
 import { getSession } from 'next-auth/client';
+import CKEditor from 'ckeditor4-react';
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
@@ -20,10 +21,6 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function AdminTemplateCreate() {
-  const editorRef = useRef();
-  const [editorLoaded, setEditorLoaded] = useState(false);
-  const { CKEditor, ClassicEditor } = editorRef.current || {};
-
   const handleSubmit = async (values) => {
     try {
       const response = await axios.post(`/admin/mail-templates`, {
@@ -50,13 +47,6 @@ export default function AdminTemplateCreate() {
     onSubmit: handleSubmit,
   });
 
-  useEffect(() => {
-    editorRef.current = {
-      CKEditor: require('@ckeditor/ckeditor5-react').CKEditor,
-      ClassicEditor: require('@ckeditor/ckeditor5-build-classic'),
-    };
-    setEditorLoaded(true);
-  }, []);
   return (
     <AdminLayout pageTitle="Create categories">
       <div className="md:w-2/3 mx-auto sm:px-6">
@@ -134,22 +124,14 @@ export default function AdminTemplateCreate() {
               <label className="block tracking-wide text-grey-darker text-xs font-bold mb-2">
                 Content
               </label>
-              {editorLoaded && (
-                <CKEditor
-                  name="content"
-                  editor={ClassicEditor}
-                  data={formik.values.content}
-                  onReady={(editor) => {
-                    editor.editing.view.change((writer) => {
-                      writer.setStyle('height', '400px', editor.editing.view.document.getRoot());
-                    });
-                  }}
-                  onChange={(event, editor) => {
-                    const data = editor.getData();
-                    formik.setFieldValue('content', data);
-                  }}
-                />
-              )}
+              <CKEditor
+                name="content"
+                data={formik.values.content}
+                onChange={({ editor }) => {
+                  const data = editor.getData();
+                  formik.setFieldValue('content', data);
+                }}
+              />
             </div>
 
             <div className="md:w-full px-3 flex justify-end items-center pt-10">

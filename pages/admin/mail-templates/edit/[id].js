@@ -4,7 +4,8 @@ import { TEMPLATE_TYPE } from 'contants/template';
 import { useFormik } from 'formik';
 import { getSession } from 'next-auth/client';
 import router from 'next/router';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
+import CKEditor from 'ckeditor4-react';
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
@@ -21,10 +22,6 @@ export const getServerSideProps = async (context) => {
 };
 
 export default function AdminTemplateEdit({ template_id }) {
-  const editorRef = useRef();
-  const [editorLoaded, setEditorLoaded] = useState(false);
-  const { CKEditor, ClassicEditor } = editorRef.current || {};
-
   const handleSubmit = async (values) => {
     try {
       const response = await axios.put(`/admin/mail-templates/${template_id}`, {
@@ -65,11 +62,6 @@ export default function AdminTemplateEdit({ template_id }) {
 
   useEffect(() => {
     getMailTemplate();
-    editorRef.current = {
-      CKEditor: require('@ckeditor/ckeditor5-react').CKEditor,
-      ClassicEditor: require('@ckeditor/ckeditor5-build-classic'),
-    };
-    setEditorLoaded(true);
   }, []);
 
   return (
@@ -149,45 +141,14 @@ export default function AdminTemplateEdit({ template_id }) {
               <label className="block tracking-wide text-grey-darker text-xs font-bold mb-2">
                 Content
               </label>
-              {editorLoaded && (
-                <CKEditor
-                  name="content"
-                  editor={ClassicEditor}
-                  data={formik.values.content}
-                  config={{
-                    toolbar: [
-                      'heading',
-                      '|',
-                      'bold',
-                      'italic',
-                      '|',
-                      'colors',
-                      'blockQuote',
-                      'link',
-                      'numberedList',
-                      'bulletedList',
-                      'imageUpload',
-                      'insertTable',
-                      'tableColumn',
-                      'tableRow',
-                      'mergeTableCells',
-                      'mediaEmbed',
-                      '|',
-                      'undo',
-                      'redo',
-                    ],
-                  }}
-                  onReady={(editor) => {
-                    editor.editing.view.change((writer) => {
-                      writer.setStyle('height', '400px', editor.editing.view.document.getRoot());
-                    });
-                  }}
-                  onChange={(event, editor) => {
-                    const data = editor.getData();
-                    formik.setFieldValue('content', data);
-                  }}
-                />
-              )}
+              <CKEditor
+                name="content"
+                data={formik.values.content}
+                onChange={({ editor }) => {
+                  const data = editor.getData();
+                  formik.setFieldValue('content', data);
+                }}
+              />
             </div>
 
             <div className="md:w-full px-3 flex justify-end items-center pt-10">
