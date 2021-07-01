@@ -1,7 +1,7 @@
 import BusinessLayout from 'components/business-layout';
+import RecentInvitations from 'components/business/invitations/RecentInvitations';
 import withCompany from 'components/hocs/withCompany';
 import React from 'react';
-import RecentInvitations from './RecentInvitations';
 
 const Invitations = () => {
   return (

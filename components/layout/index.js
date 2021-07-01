@@ -3,21 +3,26 @@
 import React from 'react';
 import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/client';
+import Image from 'next/image';
 
 export default function Layout({ children }) {
   const [session, loading] = useSession();
-  console.log('session', session);
   const handleLogout = (e) => {
     e.preventDefault();
     signOut({ callbackUrl: '/' });
   };
   return (
-    <div className="pt-16 relative">
-      <header className="text-white bg-indigo-800 fixed left-0 right-0 top-0 z-30">
-        <div className="w-full max-w-6xl mx-auto">
-          <div className="flex flex-row h-16 justify-between items-center">
+    <div className="pt-14 relative">
+      <header
+        className="text-white fixed left-0 right-0 top-0 z-30"
+        style={{ backgroundColor: '#1e1e2e' }}
+      >
+        <div className="w-full max-w-6xl mx-auto px-4 lg:px-0">
+          <div className="flex flex-row h-14 justify-between items-center">
             <Link href="/">
-              <a className="font-bold text-lg">Spiking Trust</a>
+              <a className="h-auto inline-block leading-none">
+                <Image src="/images/logo.png" width="88" height="38" />
+              </a>
             </Link>
             <ul className="flex flex-row header-menu">
               <li>
@@ -34,13 +39,13 @@ export default function Layout({ children }) {
                     <ul>
                       <li>
                         <Link href="/business">
-                          <a className="px-6 py-3 block cursor-pointer">My Companies</a>
+                          <a className="px-6 py-3 block cursor-pointer">Business Dashboard</a>
                         </Link>
                       </li>
                       {session?.user?.role && (
                         <li>
                           <Link href="/admin">
-                            <a className="px-6 py-3 block cursor-pointer">Admin</a>
+                            <a className="px-6 py-3 block cursor-pointer">Admin Dashboard</a>
                           </Link>
                         </li>
                       )}
@@ -64,8 +69,8 @@ export default function Layout({ children }) {
         </div>
       </header>
       <div>{children}</div>
-      <footer className="bg-indigo-800 py-14 text-gray-200">
-        <div className="w-full max-w-6xl mx-auto">
+      <footer className="py-14 text-gray-200" style={{ backgroundColor: '#1e1e2e' }}>
+        <div className="w-full max-w-6xl mx-auto px-4 lg:px-0">
           <ul className="flex flex-row space-x-8 mb-8">
             <li>
               <a>Legal</a>

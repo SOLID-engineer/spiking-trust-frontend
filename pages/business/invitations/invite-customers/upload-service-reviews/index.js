@@ -12,6 +12,7 @@ import { readString } from 'react-papaparse';
 import { useSelector } from 'react-redux';
 import BusinessSelector from 'slices/business/selector';
 import * as Yup from 'yup';
+import Link from 'next/link';
 
 const schema = Yup.object().shape({
   consumerEmail: Yup.string().required().email(),
@@ -26,7 +27,7 @@ const UploadServiceReviews = () => {
   const [data, setData] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [step, setStep] = useState(1);
-  const { CKEditor, ClassicEditor, isEditorLoaded } = useCKEditor();
+  const { CKEditor, isEditorLoaded } = useCKEditor();
   const [templates, setTemplates] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [isSelectTemplateModalVisible, setIsSelectTemplateModalVisible] = useState(false);
@@ -440,13 +441,18 @@ const UploadServiceReviews = () => {
                   {isEditorLoaded && (
                     <CKEditor
                       name="content"
-                      editor={ClassicEditor}
                       data={templateForm.values.content}
-                      config={{ fullPage: true, allowedContent: true }}
-                      onChange={(event, editor) => {
-                        const editorData = editor.getData();
+                      config={{
+                        fullPage: true,
+                        allowedContent: true,
+                        readOnly: true,
+                        height: '500px',
+                      }}
+                      onChange={(event) => {
+                        const editorData = event.editor.getData();
                         templateForm.setFieldValue('content', editorData);
                       }}
+                      readOnly
                       disabled
                     />
                   )}
@@ -537,7 +543,7 @@ const UploadServiceReviews = () => {
                   <Spinner />
                 </div>
                 <div className="text-center">
-                  Please don't close the browser window or click the back button
+                  Please don&apos;t close the browser window or click the back button
                 </div>
               </div>
             </div>
@@ -550,7 +556,11 @@ const UploadServiceReviews = () => {
                   We’ll be sending your invitations shortly
                 </h2>
                 <div className="mb-4">
-                  You can always check the status of your invitations in invitation history.
+                  You can always check the status of your invitations in{' '}
+                  <Link href="/business/invitations/invitation-history">
+                    <a className="text-blue-600">invitation history</a>
+                  </Link>
+                  .
                 </div>
                 <div>
                   <button

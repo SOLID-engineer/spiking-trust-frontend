@@ -10,16 +10,20 @@ import Header from './Header';
 
 const BusinessLayout = ({ pageTitle, headerBottom = null, children }) => {
   const router = useRouter();
-  console.log('🚀 ~ file: index.js ~ line 12 ~ BusinessLayout ~ router', router.asPath);
   const companies = useSelector(BusinessSelector.selectCompanies);
   const currentCompany = useSelector(BusinessSelector.selectCurrentCompany);
   const dispatch = useDispatch();
   const [activeMenu, setActiveMenu] = useState(null);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
 
   return (
-    <div className="flex flex-row bg-gray-200 transform">
-      <div className="w-60 bg-gray-800 text-white min-h-screen flex-none fixed z-40 -left-60 lg:relative lg:left-0">
-        <div className="fixed z-20 w-60 ">
+    <div className="lg:pl-60 flex flex-row pl-0">
+      <div
+        className={`w-60 bg-gray-800 text-white min-h-full h-full z-40 transition-transform transform fixed left-0 top-0 ${
+          isSidebarCollapsed ? '-translate-x-60 lg:translate-x-0' : 'translate-x-0'
+        }`}
+      >
+        <div className="w-60">
           <div className="h-14">
             {currentCompany !== null && (
               <>
@@ -67,20 +71,20 @@ const BusinessLayout = ({ pageTitle, headerBottom = null, children }) => {
             )}
           </div>
           <ul className="pb-2 mb-2 border-b border-gray-700 space-y-1 aside-menu">
-            <li className={router.asPath === '/business' ? 'active' : ''}>
+            <li className={router.pathname === '/business' ? 'active' : ''}>
               <Link href="/business">
                 <a className="px-6 py-2 block font-semibold hover:bg-gray-700">Home</a>
               </Link>
             </li>
-            <li className={router.asPath === '/business/reviews' ? 'active' : ''}>
+            <li className={router.pathname === '/business/reviews' ? 'active' : ''}>
               <Link href="/business/reviews">
                 <a className="px-6 py-2 block font-semibold hover:bg-gray-700">Reviews</a>
               </Link>
             </li>
             <li
-              className={`${startsWith(router.asPath, '/business/invitations') ? 'active' : ''} ${
+              className={`${startsWith(router.pathname, '/business/invitations') ? 'active' : ''} ${
                 activeMenu === 'menu-invitations' ||
-                (activeMenu === null && startsWith(router.asPath, '/business/invitations'))
+                (activeMenu === null && startsWith(router.pathname, '/business/invitations'))
                   ? 'current'
                   : ''
               }`}
@@ -110,14 +114,14 @@ const BusinessLayout = ({ pageTitle, headerBottom = null, children }) => {
                 </span>
               </a>
               <ul className="sub-menu">
-                <li className={router.asPath === '/business/invitations' ? 'active' : ''}>
+                <li className={router.pathname === '/business/invitations' ? 'active' : ''}>
                   <Link href="/business/invitations">
                     <a className="px-6 py-2 block hover:bg-gray-700 text-sm">Overview</a>
                   </Link>
                 </li>
                 <li
                   className={
-                    router.asPath ===
+                    router.pathname ===
                     '/business/invitations/invite-customers/upload-service-reviews'
                       ? 'active'
                       : ''
@@ -130,9 +134,9 @@ const BusinessLayout = ({ pageTitle, headerBottom = null, children }) => {
               </ul>
             </li>
             <li
-              className={`${startsWith(router.asPath, '/business/analytics') ? 'active' : ''} ${
+              className={`${startsWith(router.pathname, '/business/analytics') ? 'active' : ''} ${
                 activeMenu === 'menu-analytics' ||
-                (activeMenu === null && startsWith(router.asPath, '/business/analytics'))
+                (activeMenu === null && startsWith(router.pathname, '/business/analytics'))
                   ? 'current'
                   : ''
               }`}
@@ -162,12 +166,12 @@ const BusinessLayout = ({ pageTitle, headerBottom = null, children }) => {
                 </span>
               </a>
               <ul className="sub-menu">
-                <li className={router.asPath === '/business/analytics/overview' ? 'active' : ''}>
+                <li className={router.pathname === '/business/analytics/overview' ? 'active' : ''}>
                   <Link href="/business/analytics/overview">
                     <a className="px-6 py-2 block hover:bg-gray-700 text-sm">Overview</a>
                   </Link>
                 </li>
-                <li className={router.asPath === '/business/analytics/benchmark' ? 'active' : ''}>
+                <li className={router.pathname === '/business/analytics/benchmark' ? 'active' : ''}>
                   <Link href="/business/analytics/benchmark">
                     <a className="px-6 py-2 block hover:bg-gray-700 text-sm">Benchmark</a>
                   </Link>
@@ -179,7 +183,7 @@ const BusinessLayout = ({ pageTitle, headerBottom = null, children }) => {
             {/* <li>
               <a className="px-6 py-1 block font-semibold text-sm hover:bg-gray-700">Get Started</a>
             </li> */}
-            <li className={startsWith(router.asPath, '/business/settings') ? 'active' : ''}>
+            <li className={startsWith(router.pathname, '/business/settings') ? 'active' : ''}>
               <Link href="/business/settings">
                 <a className="px-6 py-1 block font-semibold text-sm hover:bg-gray-700">Settings</a>
               </Link>
@@ -187,7 +191,42 @@ const BusinessLayout = ({ pageTitle, headerBottom = null, children }) => {
           </ul>
         </div>
       </div>
+      {!isSidebarCollapsed && (
+        <div
+          className="fixed inset-0 bg-gray-600 z-30 opacity-60 lg:hidden"
+          role="button"
+          aria-hidden="true"
+          onClick={() => {
+            setIsSidebarCollapsed((prevState) => !prevState);
+          }}
+        ></div>
+      )}
       <div className="flex-grow relative min-w-0">
+        <div className="lg:hidden bg-gray-800 text-white h-14 w-full flex flex-row items-center px-4 space-x-4">
+          <button
+            type="button"
+            className="block w-8 h-8 p-1.5"
+            onClick={() => {
+              setIsSidebarCollapsed((prevState) => !prevState);
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="feather feather-menu"
+            >
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <span className="font-semibold text-lg">{currentCompany.domain}</span>
+        </div>
         <Header pageTitle={pageTitle} headerBottom={headerBottom} />
         <div className="p-6 w-full">{children}</div>
       </div>

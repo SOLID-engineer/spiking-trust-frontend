@@ -23,7 +23,7 @@ function InputSearch({ getReviews }) {
   return (
     <form
       onSubmit={onSubmitSearchHandler}
-      className="px-2 align items-center border-gray-300 w-full h-10 flex border flex-row space-x-4"
+      className="px-2 align items-center border-gray-300 w-full h-10 flex border flex-row space-x-2 text-sm"
     >
       <SearchIcon />
       <input

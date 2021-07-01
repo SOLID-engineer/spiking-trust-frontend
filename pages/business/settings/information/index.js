@@ -25,6 +25,7 @@ export const getServerSideProps = async (context) => {
 
 const Information = () => {
   const currentCompany = useSelector(BusinessSelector.selectCurrentCompany);
+  const [company, setCompany] = useState(currentCompany);
   const [isLoading, setIsLoading] = useState(false);
   const [aboutFormInitialValues, setAboutFormInitialValues] = useState({
     companyName: '',
@@ -40,6 +41,16 @@ const Information = () => {
     city: '',
     country: '',
   });
+  const logoFileInput = React.useRef(null);
+
+  const handleLogoFileInputChange = async (e) => {
+    try {
+      const formData = new FormData();
+      formData.append('image', e.target.files[0]);
+      const response = await axios.post(`/business/${currentCompany.domain}/logo`, formData);
+      setCompany(response.data);
+    } catch (error) {}
+  };
 
   const handleAboutFormSubmit = async (values) => {
     try {
@@ -88,6 +99,7 @@ const Information = () => {
         companyWebsite: response.data.domain,
         description: response.data.description,
       });
+      setCompany(response.data);
     } catch (error) {}
   };
 
@@ -179,6 +191,39 @@ const Information = () => {
                       onBlur={aboutForm.handleBlur}
                       value={aboutForm.values.description}
                     ></textarea>
+                  </div>
+                  <div className="mb-4">
+                    <label className="block mb-2 text-sm font-semibold">Logo:</label>
+                    <div className="flex flex-row space-x-4">
+                      <div>
+                        <input
+                          type="file"
+                          ref={logoFileInput}
+                          className="hidden"
+                          accept="image/*"
+                          onChange={handleLogoFileInputChange}
+                          onClick={(e) => {
+                            e.target.value = null;
+                          }}
+                        />
+                        <button
+                          type="button"
+                          className="border py-2 w-64 font-semibold"
+                          onClick={() => {
+                            logoFileInput.current.click();
+                          }}
+                        >
+                          Upload company logo
+                        </button>
+                      </div>
+                      {company.profile_image && (
+                        <div className="w-48 bg-gray-100 p-4">
+                          <img
+                            src={`${process.env.NEXT_PUBLIC_FILE_STORAGE_URL}/${company.profile_image}`}
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className="text-right p-4 flex flex-row justify-end space-x-4 border-t">

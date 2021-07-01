@@ -5,11 +5,11 @@ import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 
 import { isEmpty } from 'lodash';
-import StarRating from '../../components/common/StarRating';
-import StarRatingInput from '../../components/common/StarRatingInput';
-import Layout from '../../components/layout';
-import PercentageBar from './PercentageBar';
-import InputSearch from './InputSearch';
+import StarRating from 'components/common/StarRating';
+import StarRatingInput from 'components/common/StarRatingInput';
+import Layout from 'components/layout';
+import PercentageBar from 'components/review/PercentageBar';
+import InputSearch from 'components/review/InputSearch';
 
 const relativeTime = require('dayjs/plugin/relativeTime');
 
@@ -128,17 +128,29 @@ const Review = ({ company, data }) => {
   return (
     <Layout>
       <div className="bg-white shadow mb-4">
-        <div className="w-full max-w-6xl mx-auto">
+        <div className="w-full max-w-6xl mx-auto px-4 lg:px-0">
           <div className="grid grid-cols-3 gap-8 py-6">
-            <div className="col-span-2">
-              <h1 className="text-3xl font-bold mb-2">{company.name || company.domain}</h1>
-              <div className="mb-2">Reviews {company.reviews_count}</div>
-              <div className="flex flex-row space-x-4 items-center">
-                <StarRating value={company.average_rating} />
-                <div>{parseFloat(company.average_rating).toFixed(1)}</div>
+            <div className="col-span-3 lg:col-span-2 flex flex-row space-x-8">
+              <div className="w-24 lg:w-40 flex flex-row justify-center items-start">
+                {company.profile_image ? (
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_FILE_STORAGE_URL}/${company.profile_image}`}
+                    alt={company.domain}
+                  />
+                ) : (
+                  <div className="bg-gray-100 w-full h-full">&nbsp;</div>
+                )}
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold mb-2">{company.name || company.domain}</h1>
+                <div className="mb-2">Reviews {company.reviews_count}</div>
+                <div className="flex flex-row space-x-4 items-center">
+                  <StarRating value={company.average_rating} />
+                  <div>{parseFloat(company.average_rating).toFixed(1)}</div>
+                </div>
               </div>
             </div>
-            <div>
+            <div className="col-span-3 lg:col-span-1">
               <a
                 className="py-3 px-6 border block"
                 href={`//${company.domain}`}
@@ -154,8 +166,8 @@ const Review = ({ company, data }) => {
       </div>
       <div className="min-h-96">
         <div className="w-full max-w-6xl mx-auto flex flex-row flex-wrap items-start">
-          <div className="grid grid-cols-3 gap-8 w-full mb-8">
-            <div className="col-span-2">
+          <div className="grid lg:grid-cols-3 gap-8 w-full mb-8">
+            <div className="lg:col-span-2">
               <div className="bg-white p-4 mb-4 flex flex-row items-center justify-between">
                 <Link href={`/evaluate/${company.domain}`}>
                   <a className="text-blue-600">Write a review</a>
@@ -172,117 +184,120 @@ const Review = ({ company, data }) => {
               </div>
 
               <div className="mb-4">
-                <div className="bg-white p-4 mb-2">
-                  <div className="pb-4 border-b">
-                    <span className="font-semibold space-x-2 text-lg">
-                      <span className="font-bold ">Reviews</span>
-                      <span className="text-gray-400">{company.reviews_count}</span>
-                    </span>
+                {company.reviews_count > 0 && (
+                  <div className="bg-white p-4 mb-2">
+                    <div className="pb-2 border-b mb-4">
+                      <span className="font-semibold space-x-2 text-xl">
+                        <span className="font-bold">Reviews</span>
+                        <span className="text-gray-400">{company.reviews_count}</span>
+                      </span>
+                    </div>
+                    <div className="mb-4 text-sm">
+                      <div className="flex flex-row items-center justify-between mb-2">
+                        <div className="flex flex-none flex-row items-center space-x-2 w-24">
+                          <input
+                            onChange={() => filterStarHandler('5')}
+                            defaultChecked={filterStars.includes('5')}
+                            type="checkbox"
+                          />
+                          <span>Excellent</span>
+                        </div>
+                        <PercentageBar
+                          barColor="#00b67a"
+                          activePercentage={(companyRate['5'] || 0) / company.reviews_count}
+                          active={filterStars.includes('5')}
+                        />
+                        <div className="flex-none text-right text-gray-400 w-16">
+                          {`${parseFloat(
+                            ((companyRate['5'] || 0) * 100) / company.reviews_count
+                          ).toFixed(1)}%`}
+                        </div>
+                      </div>
+                      <div className="flex flex-row items-center justify-between mb-2">
+                        <div className="flex flex-none flex-row items-center space-x-2 w-24">
+                          <input
+                            onChange={() => filterStarHandler('4')}
+                            defaultChecked={filterStars.includes('4')}
+                            type="checkbox"
+                          />
+                          <span>Great</span>
+                        </div>
+                        <PercentageBar
+                          barColor="#73cf11"
+                          activePercentage={(companyRate['4'] || 0) / company.reviews_count}
+                          active={filterStars.includes('4')}
+                        />
+                        <div className="flex-none text-right text-gray-400 w-16">
+                          {`${parseFloat(
+                            ((companyRate['4'] || 0) * 100) / company.reviews_count
+                          ).toFixed(1)}%`}
+                        </div>
+                      </div>
+                      <div className="flex flex-row items-center justify-between mb-2">
+                        <div className="flex flex-none flex-row items-center space-x-2 w-24">
+                          <input
+                            onChange={() => filterStarHandler('3')}
+                            defaultChecked={filterStars.includes('3')}
+                            type="checkbox"
+                          />
+                          <span>Average</span>
+                        </div>
+                        <PercentageBar
+                          barColor="#ffce00"
+                          activePercentage={(companyRate['3'] || 0) / company.reviews_count}
+                          active={filterStars.includes('3')}
+                        />
+                        <div className="flex-none text-right text-gray-400 w-16">
+                          {`${parseFloat(
+                            ((companyRate['3'] || 0) * 100) / company.reviews_count
+                          ).toFixed(1)}%`}
+                        </div>
+                      </div>
+                      <div className="flex flex-row items-center justify-between mb-2">
+                        <div className="flex flex-none flex-row items-center space-x-2 w-24">
+                          <input
+                            onChange={() => filterStarHandler('2')}
+                            defaultChecked={filterStars.includes('2')}
+                            type="checkbox"
+                          />
+                          <span>Poor</span>
+                        </div>
+                        <PercentageBar
+                          barColor="#ff8622"
+                          activePercentage={(companyRate['2'] || 0) / company.reviews_count}
+                          active={filterStars.includes('2')}
+                        />
+                        <div className="flex-none text-right text-gray-400 w-16">
+                          {`${parseFloat(
+                            ((companyRate['2'] || 0) * 100) / company.reviews_count
+                          ).toFixed(1)}%`}
+                        </div>
+                      </div>
+                      <div className="flex flex-row items-center justify-between mb-2">
+                        <div className="flex flex-none flex-row items-center space-x-2 w-24">
+                          <input
+                            onChange={() => filterStarHandler('1')}
+                            defaultChecked={filterStars.includes('1')}
+                            type="checkbox"
+                          />
+                          <span>Bad</span>
+                        </div>
+                        <PercentageBar
+                          barColor="#ff3722"
+                          activePercentage={(companyRate['1'] || 0) / company.reviews_count}
+                          active={filterStars.includes('1')}
+                        />
+                        <div className="flex-none text-right text-gray-400 w-16">
+                          {`${parseFloat(
+                            ((companyRate['1'] || 0) * 100) / company.reviews_count
+                          ).toFixed(1)}%`}
+                        </div>
+                      </div>
+                    </div>
+                    <InputSearch getReviews={searchHandler} />
                   </div>
-                  <div className="py-4">
-                    <div className="flex flex-row items-center justify-between mb-2">
-                      <div className="flex flex-none flex-row items-center space-x-2 w-28">
-                        <input
-                          onChange={() => filterStarHandler('5')}
-                          defaultChecked={filterStars.includes('5')}
-                          type="checkbox"
-                        />
-                        <span>Excellent</span>
-                      </div>
-                      <PercentageBar
-                        barColor="#00b67a"
-                        activePercentage={companyRate['5'] / company.reviews_count}
-                        active={filterStars.includes('5')}
-                      />
-                      <div className="flex-none text-right text-gray-400 w-16">
-                        {`${parseFloat((companyRate['5'] * 100) / company.reviews_count).toFixed(
-                          1
-                        )}%`}
-                      </div>
-                    </div>
-                    <div className="flex flex-row items-center justify-between mb-2">
-                      <div className="flex flex-none flex-row items-center space-x-2 w-28">
-                        <input
-                          onChange={() => filterStarHandler('4')}
-                          defaultChecked={filterStars.includes('4')}
-                          type="checkbox"
-                        />
-                        <span>Great</span>
-                      </div>
-                      <PercentageBar
-                        barColor="#73cf11"
-                        activePercentage={companyRate['4'] / company.reviews_count}
-                        active={filterStars.includes('4')}
-                      />
-                      <div className="flex-none text-right text-gray-400 w-16">
-                        {`${parseFloat((companyRate['4'] * 100) / company.reviews_count).toFixed(
-                          1
-                        )}%`}
-                      </div>
-                    </div>
-                    <div className="flex flex-row items-center justify-between mb-2">
-                      <div className="flex flex-none flex-row items-center space-x-2 w-28">
-                        <input
-                          onChange={() => filterStarHandler('3')}
-                          defaultChecked={filterStars.includes('3')}
-                          type="checkbox"
-                        />
-                        <span>Average</span>
-                      </div>
-                      <PercentageBar
-                        barColor="#ffce00"
-                        activePercentage={companyRate['3'] / company.reviews_count}
-                        active={filterStars.includes('3')}
-                      />
-                      <div className="flex-none text-right text-gray-400 w-16">
-                        {`${parseFloat((companyRate['3'] * 100) / company.reviews_count).toFixed(
-                          1
-                        )}%`}
-                      </div>
-                    </div>
-                    <div className="flex flex-row items-center justify-between mb-2">
-                      <div className="flex flex-none flex-row items-center space-x-2 w-28">
-                        <input
-                          onChange={() => filterStarHandler('2')}
-                          defaultChecked={filterStars.includes('2')}
-                          type="checkbox"
-                        />
-                        <span>Poor</span>
-                      </div>
-                      <PercentageBar
-                        barColor="#ff8622"
-                        activePercentage={companyRate['2'] / company.reviews_count}
-                        active={filterStars.includes('2')}
-                      />
-                      <div className="flex-none text-right text-gray-400 w-16">
-                        {`${parseFloat((companyRate['2'] * 100) / company.reviews_count).toFixed(
-                          1
-                        )}%`}
-                      </div>
-                    </div>
-                    <div className="flex flex-row items-center justify-between mb-2">
-                      <div className="flex flex-none flex-row items-center space-x-2 w-28">
-                        <input
-                          onChange={() => filterStarHandler('1')}
-                          defaultChecked={filterStars.includes('1')}
-                          type="checkbox"
-                        />
-                        <span>Bad</span>
-                      </div>
-                      <PercentageBar
-                        barColor="#ff3722"
-                        activePercentage={companyRate['1'] / company.reviews_count}
-                        active={filterStars.includes('1')}
-                      />
-                      <div className="flex-none text-right text-gray-400 w-16">
-                        {`${parseFloat((companyRate['1'] * 100) / company.reviews_count).toFixed(
-                          1
-                        )}%`}
-                      </div>
-                    </div>
-                  </div>
-                  <InputSearch getReviews={searchHandler} />
-                </div>
+                )}
+
                 {reviews.map((review) => (
                   <div className="bg-white p-4 mb-2" key={review.id}>
                     <div className="pb-4 border-b">
