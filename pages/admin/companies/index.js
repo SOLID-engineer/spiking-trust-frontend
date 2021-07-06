@@ -4,12 +4,12 @@ import Link from 'next/link';
 
 import axios from 'axios';
 import EditIcon from 'components/icons/edit';
-import TrashIcon from 'components/icons/trash';
 
 import { getSession } from 'next-auth/client';
 import Paginate from 'components/admin/paginate';
 import router from 'next/router';
 import dayjs from 'dayjs';
+import Spinner from 'components/common/Spinner';
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
@@ -27,6 +27,7 @@ export const getServerSideProps = async (context) => {
 
 const CompanyAdmin = ({ query }) => {
   const [companies, setCompanies] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [pages, setPages] = useState({
     current_page: query?.page || 1,
     last_page: 0,
@@ -35,6 +36,7 @@ const CompanyAdmin = ({ query }) => {
   });
 
   const getCompanies = async (params) => {
+    setLoading(true);
     const response = await axios.get('/admin/companies', { params });
     const { data = [] } = response;
     setCompanies(data.items);
@@ -44,6 +46,7 @@ const CompanyAdmin = ({ query }) => {
       total: data.total,
       per_page: data.per_page,
     });
+    setLoading(false);
   };
 
   const changePage = ({ page }) => {
@@ -72,83 +75,91 @@ const CompanyAdmin = ({ query }) => {
           <p className="font-bold text-xs pt-5 px-4">
             {companies.length}/{pages.total || 0} companies
           </p>
-          <table className="w-full whitespace-nowrap my-4">
-            <thead>
-              <tr className="w-full text-xs leading-none uppercase font-bold">
-                <th className="p-5 text-left">Url</th>
-                <th className="p-5 text-left">Claimed At</th>
-                <th className="p-5 text-left">Created At</th>
-                <th className="p-5 text-left w-28">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="w-full">
-              {companies.map((company) => {
-                return (
-                  <tr
-                    key={company.id}
-                    className="h-20 text-xs leading-none text-gray-800 bg-white border-b border-t border-gray-100"
-                  >
-                    <td className="cursor-pointer">
-                      <div className="items-center">
-                        <span className="pl-5 py-3">{company.name}</span>
-                        <p className="pl-5 py-3">
-                          {company.domain} |
-                          <a
-                            className="text-blue-300 px-3"
-                            target="_blank"
-                            href={`https://${company.domain}`}
-                            rel="noreferrer"
-                          >
-                            View website
-                          </a>
-                        </p>
-                      </div>
-                    </td>
-                    <td className="cursor-pointer">
-                      <div className="items-center">
-                        <p className="pl-5">
-                          {company.claimed_at
-                            ? dayjs(company.claimed_at).format('H:m:ss MM/DD/YYYY')
-                            : ' --- '}
-                        </p>
-                      </div>
-                    </td>
-                    <td className="cursor-pointer">
-                      <div className="flex items-center">
-                        <div className="pl-5">
-                          {dayjs(company.created_at).format('H:m:ss MM/DD/YYYY') || ' --- '}
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="flex ml-5">
-                        <Link href={`/admin/companies/edit/${company.id}`}>
-                          <p
-                            className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6"
-                            title="Edit details"
-                          >
-                            <span className="text-xs">
-                              <EditIcon />
-                            </span>
-                          </p>
-                        </Link>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          <div className="flex text-gray-700 mt-4 justify-end">
-            <div className="flex flex-col items-center my-5 mx-5">
-              <Paginate
-                currentPage={pages.current_page}
-                lastPage={pages.last_page}
-                changePage={changePage}
-                total={pages.total}
-              />
+          {loading ? (
+            <div className="flex justify-center items-center h-72">
+              <Spinner />
             </div>
-          </div>
+          ) : (
+            <>
+              <table className="w-full whitespace-nowrap my-4">
+                <thead>
+                  <tr className="w-full text-xs leading-none uppercase font-bold">
+                    <th className="p-5 text-left">Url</th>
+                    <th className="p-5 text-left">Claimed At</th>
+                    <th className="p-5 text-left">Created At</th>
+                    <th className="p-5 text-left w-28">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="w-full">
+                  {companies.map((company) => {
+                    return (
+                      <tr
+                        key={company.id}
+                        className="h-20 text-xs leading-none text-gray-800 bg-white border-b border-t border-gray-100"
+                      >
+                        <td className="cursor-pointer">
+                          <div className="items-center">
+                            <span className="pl-5 py-3">{company.name}</span>
+                            <p className="pl-5 py-3">
+                              {company.domain} |
+                              <a
+                                className="text-blue-300 px-3"
+                                target="_blank"
+                                href={`https://${company.domain}`}
+                                rel="noreferrer"
+                              >
+                                View website
+                              </a>
+                            </p>
+                          </div>
+                        </td>
+                        <td className="cursor-pointer">
+                          <div className="items-center">
+                            <p className="pl-5">
+                              {company.claimed_at
+                                ? dayjs(company.claimed_at).format('H:m:ss MM/DD/YYYY')
+                                : ' --- '}
+                            </p>
+                          </div>
+                        </td>
+                        <td className="cursor-pointer">
+                          <div className="flex items-center">
+                            <div className="pl-5">
+                              {dayjs(company.created_at).format('H:m:ss MM/DD/YYYY') || ' --- '}
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div className="flex ml-5">
+                            <Link href={`/admin/companies/edit/${company.id}`}>
+                              <p
+                                className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6"
+                                title="Edit details"
+                              >
+                                <span className="text-xs">
+                                  <EditIcon />
+                                </span>
+                              </p>
+                            </Link>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              <div className="flex text-gray-700 mt-4 justify-end">
+                <div className="flex flex-col items-center my-5 mx-5">
+                  <Paginate
+                    currentPage={pages.current_page}
+                    lastPage={pages.last_page}
+                    changePage={changePage}
+                    total={pages.total}
+                  />
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </AdminLayout>

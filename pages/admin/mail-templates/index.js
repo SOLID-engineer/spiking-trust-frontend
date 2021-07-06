@@ -9,6 +9,8 @@ import TrashIcon from 'components/icons/trash';
 import Paginate from 'components/admin/paginate';
 import { TEMPLATE_TYPE } from 'contants/template';
 import router from 'next/router';
+import Spinner from 'components/common/Spinner';
+import toast from 'utils/toast';
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -26,6 +28,7 @@ export async function getServerSideProps(context) {
 
 export default function Edit({ query }) {
   const [templates, setTemplates] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [pages, setPages] = useState({
     current_page: query?.page || 1,
     last_page: 0,
@@ -34,6 +37,7 @@ export default function Edit({ query }) {
   });
 
   const getTemplates = async (params) => {
+    setLoading(true);
     const response = await axios.get('/admin/mail-templates', { params });
     const { data = [] } = response;
     setTemplates(data.items);
@@ -43,6 +47,7 @@ export default function Edit({ query }) {
       total: data.total,
       per_page: data.per_page,
     });
+    setLoading(false);
   };
 
   const removeRecord = async (id) => {
@@ -51,7 +56,7 @@ export default function Edit({ query }) {
       if (!confirm) return;
       const response = await axios.delete(`/admin/mail-templates/${id}`);
       const { msg = 'Deleted record success.' } = response;
-      alert(msg);
+      toast.success(msg);
       getTemplates();
     } catch (error) {
       console.log(error);
@@ -95,83 +100,91 @@ export default function Edit({ query }) {
           <p className="font-bold text-xs pt-5 px-4">
             {templates.length}/{pages.total || 0} templates
           </p>
-          <table className="w-full whitespace-nowrap">
-            <thead>
-              <tr className="w-full text-xs leading-none uppercase font-bold">
-                <th className="p-5 text-left">Name</th>
-                <th className="p-5 text-left">Subject</th>
-                <th className="p-5 text-left">Type</th>
-                <th className="p-5 text-left">Primary</th>
-                <th className="p-5 text-left w-28">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="w-full">
-              {templates.map((template) => {
-                return (
-                  <tr
-                    key={template.id}
-                    className="h-20 text-xs leading-none text-gray-800 bg-white border-b border-t border-gray-100"
-                  >
-                    <td className="cursor-pointer">
-                      <div className="flex items-center">
-                        <div className="pl-5">{template.name}</div>
-                      </div>
-                    </td>
-                    <td className="cursor-pointer">
-                      <div className="flex items-center">
-                        <div className="pl-5">{template.subject}</div>
-                      </div>
-                    </td>
-                    <td className="cursor-pointer">
-                      <div className="flex items-center">
-                        <div className="pl-5">{TEMPLATE_TYPE[template.type]}</div>
-                      </div>
-                    </td>
-                    <td className="cursor-pointer">
-                      <div className="flex items-center">
-                        <div className="pl-5">
-                          {template.is_primary ? 'Primary' : ' Not Primary'}
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="flex pl-5">
-                        <Link href={`/admin/mail-templates/edit/${template.id}`}>
-                          <p
-                            className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6 cursor-pointer"
-                            title="Edit details"
-                          >
-                            <span className="text-xs">
-                              <EditIcon />
-                            </span>
-                          </p>
-                        </Link>
-                        <button
-                          className="btn btn-sm btn-clean btn-icon mr-2  h-6 w-6"
-                          title="Detele details"
-                          onClick={() => removeRecord(template.id)}
-                        >
-                          <span className="text-xs text-red-400">
-                            <TrashIcon />
-                          </span>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          <div className="flex text-gray-700 mt-4 justify-end">
-            <div className="flex flex-col items-center my-5 mx-5">
-              <Paginate
-                currentPage={pages.current_page}
-                lastPage={pages.last_page}
-                changePage={changePage}
-                total={pages.total}
-              />
+          {loading ? (
+            <div className="flex justify-center items-center h-72">
+              <Spinner />
             </div>
-          </div>
+          ) : (
+            <>
+              <table className="w-full whitespace-nowrap">
+                <thead>
+                  <tr className="w-full text-xs leading-none uppercase font-bold">
+                    <th className="p-5 text-left">Name</th>
+                    <th className="p-5 text-left">Subject</th>
+                    <th className="p-5 text-left">Type</th>
+                    <th className="p-5 text-left">Primary</th>
+                    <th className="p-5 text-left w-28">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="w-full">
+                  {templates.map((template) => {
+                    return (
+                      <tr
+                        key={template.id}
+                        className="h-20 text-xs leading-none text-gray-800 bg-white border-b border-t border-gray-100"
+                      >
+                        <td className="cursor-pointer">
+                          <div className="flex items-center">
+                            <div className="pl-5">{template.name}</div>
+                          </div>
+                        </td>
+                        <td className="cursor-pointer">
+                          <div className="flex items-center">
+                            <div className="pl-5">{template.subject}</div>
+                          </div>
+                        </td>
+                        <td className="cursor-pointer">
+                          <div className="flex items-center">
+                            <div className="pl-5">{TEMPLATE_TYPE[template.type]}</div>
+                          </div>
+                        </td>
+                        <td className="cursor-pointer">
+                          <div className="flex items-center">
+                            <div className="pl-5">
+                              {template.is_primary ? 'Primary' : ' Not Primary'}
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div className="flex pl-5">
+                            <Link href={`/admin/mail-templates/edit/${template.id}`}>
+                              <p
+                                className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6 cursor-pointer"
+                                title="Edit details"
+                              >
+                                <span className="text-xs">
+                                  <EditIcon />
+                                </span>
+                              </p>
+                            </Link>
+                            <button
+                              className="btn btn-sm btn-clean btn-icon mr-2  h-6 w-6"
+                              title="Detele details"
+                              onClick={() => removeRecord(template.id)}
+                            >
+                              <span className="text-xs text-red-400">
+                                <TrashIcon />
+                              </span>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              <div className="flex text-gray-700 mt-4 justify-end">
+                <div className="flex flex-col items-center my-5 mx-5">
+                  <Paginate
+                    currentPage={pages.current_page}
+                    lastPage={pages.last_page}
+                    changePage={changePage}
+                    total={pages.total}
+                  />
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </AdminLayout>

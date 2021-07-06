@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AdminLayout from 'components/admin';
 import { TEMPLATE_TYPE } from 'contants/template';
 import { useFormik } from 'formik';
@@ -6,6 +6,7 @@ import axios from 'axios';
 import router from 'next/router';
 import { getSession } from 'next-auth/client';
 import CKEditor from 'ckeditor4-react';
+import toast from 'utils/toast';
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
@@ -31,7 +32,7 @@ export default function AdminTemplateCreate() {
         is_default: values.is_default,
       });
       const { data } = response;
-
+      toast.success('Create mail template success.');
       if (data) router.push({ pathname: '/admin/mail-templates' }, undefined, { shallow: true });
     } catch (error) {}
   };

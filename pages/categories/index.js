@@ -23,7 +23,7 @@ const Categories = (props) => {
         </div>
       </div>
       <div className="max-w-6xl mx-auto py-3 ">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="md:grid md:grid-cols-3 gap-4">
           <aside>
             <div className="px-5 py-6 bg-white">
               <h3 className="text-lg font-semibold mb-6">View Category</h3>
@@ -31,8 +31,19 @@ const Categories = (props) => {
                 <ul>
                   {categories.map((category) => {
                     return (
-                      <li key={`ls-${category.id}`} className="mb-4 " key={category.id}>
-                        <a href={`#${category.slug}`}>
+                      <li
+                        key={`ls-${category.id}`}
+                        className="mb-4 font-semibold pb-4 border-b md:border-none md:py-0"
+                        key={category.id}
+                      >
+                        <p className="block md:hidden" href={`#${category.slug}`}>
+                          <Link href={`/categories/${category.slug}`}>
+                            <span className="hover:text-blue-700 cursor-pointer">
+                              {category.name}
+                            </span>
+                          </Link>
+                        </p>
+                        <a className="hidden md:block" href={`#${category.slug}`}>
                           <span className="hover:text-blue-700">{category.name}</span>
                         </a>
                       </li>
@@ -42,7 +53,7 @@ const Categories = (props) => {
               </div>
             </div>
           </aside>
-          <section className="col-span-2">
+          <section className="md:col-span-2 hidden md:block">
             <div className="bg-white py-7 px-6 text-sm">
               {categories.map((category) => {
                 return (

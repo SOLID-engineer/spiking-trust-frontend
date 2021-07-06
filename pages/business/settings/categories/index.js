@@ -77,7 +77,6 @@ const CategoryBusiness = () => {
 
   useEffect(async () => {
     reRenderCategory();
-    console.log(321);
   }, [lsCategories]);
 
   return (

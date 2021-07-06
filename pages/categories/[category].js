@@ -15,7 +15,6 @@ export const getServerSideProps = async (context) => {
       axios.get(`/categories/${category}`),
       axios.get(`/companies/categories/${category}`),
     ]);
-    console.log('companiesRes', companiesRes);
     const [categories, companies] = await Promise.all([categoriesRes.data, companiesRes.data]);
 
     props.category = categories;
@@ -46,7 +45,7 @@ const Cateogires = ({ category, companies, slug }) => {
         </div>
       </div>
       <div className="max-w-6xl mx-auto py-3 ">
-        <div className="grid grid-cols-4 gap-4">
+        <div className="md:grid grid-cols-4 gap-4">
           <aside>
             <div className="px-5 py-6 bg-white">
               <div>
@@ -98,7 +97,6 @@ const Cateogires = ({ category, companies, slug }) => {
                 <span className="font-semibold text-gray-400">
                   Showing 1-10 of {companies?.total} results
                 </span>
-                based on current filters.
               </p>
               <div className="my-6">
                 {companies?.data &&
