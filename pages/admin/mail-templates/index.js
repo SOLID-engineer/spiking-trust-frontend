@@ -7,7 +7,7 @@ import axios from 'axios';
 import EditIcon from 'components/icons/edit';
 import TrashIcon from 'components/icons/trash';
 import Paginate from 'components/admin/paginate';
-import { TEMPLATE_TYPE } from 'contants/template';
+import { TEMPLATE_TYPE } from 'constants/template';
 import router from 'next/router';
 import Spinner from 'components/common/Spinner';
 import toast from 'utils/toast';

@@ -1,168 +1,214 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import Select from 'react-select';
 import axios from 'axios';
 import Spinner from 'components/common/Spinner';
 
 import BusinessSelector from 'slices/business/selector';
 import BusinessLayout from 'components/business-layout';
 import withCompany from 'components/hocs/withCompany';
+import { filter, isEmpty, lowerCase } from 'lodash';
 
 const CategoryBusiness = () => {
-  const [categories, setCategories] = useState([]);
-  const [lsCategories, setLsCategories] = useState([]);
-  const [selected, setSelected] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingList, setIsLoadingList] = useState(true);
-
   const currentCompany = useSelector(BusinessSelector.selectCurrentCompany);
+  const [categories, setCategories] = useState([]);
+  const [filteredCategories, setFilteredCategories] = useState([]);
+  const [search, setSearch] = useState('');
+  const [companyCategories, setCompanyCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleCreate = async () => {
-    if (selected) {
-      await axios.post(`/business/${currentCompany.domain}/categories`, {
-        category: selected,
-      });
-      await getCatgoryByDomain();
-      setSelected(null);
-    }
+  const getCategories = async () => {
+    try {
+      const response = await axios.get('/categories');
+      setCategories(filter(response.data, { level: 3 }));
+    } catch (error) {}
   };
 
-  const getCatgoryByDomain = async () => {
-    setIsLoadingList(true);
-    const categoriesRes = await axios.get(`/business/${currentCompany.domain}/categories`);
-    setLsCategories(categoriesRes.data);
-    setIsLoadingList(false);
-  };
-
-  const removeCategory = async (id) => {
+  const getCompanyCategories = async () => {
     setIsLoading(true);
-    axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
-    axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-    await axios.delete(`/business/${currentCompany.domain}/categories`, {
-      data: { category: id },
-    });
+    try {
+      const response = await axios.get(`/companies/${currentCompany.uuid}/categories`);
+      setCompanyCategories(response.data);
+    } catch (error) {}
     setIsLoading(false);
-    await getCatgoryByDomain();
   };
 
-  const reRenderCategory = () => {
-    console.log(lsCategories);
-    const newCategories = categories.filter(
-      (item) => !lsCategories.some((category) => item.value === category.id)
-    );
-    setCategories(newCategories);
+  const onReset = () => {
+    setSearch('');
+    setSelectedCategory(null);
   };
 
-  const getAllCategories = async () => {
-    const response = await axios.get(`/business/categories`);
-    const newCategories = response.data.map((item) => {
-      return item.children?.length === 0 && { value: item.id, label: item.name };
-    });
-    setCategories(newCategories);
+  const onSearchChange = (e) => {
+    setSelectedCategory(null);
+    setSearch(e.target.value);
   };
 
-  const setDefaultCategory = async (id) => {
-    await axios.put(`/business/${currentCompany.domain}/categories`, {
-      category: id,
-    });
-    await getCatgoryByDomain();
+  const onSelect = (category) => {
+    setSearch(category.name);
+    setSelectedCategory(category);
   };
 
-  useEffect(async () => {
-    if (currentCompany) {
-      await getAllCategories();
-      await getCatgoryByDomain();
+  const handleAddCategory = async () => {
+    if (selectedCategory !== null) {
+      try {
+        await axios.post(`/business/${currentCompany.domain}/categories`, {
+          category: selectedCategory.id,
+        });
+        onReset();
+        getCompanyCategories();
+      } catch (error) {}
     }
+  };
+
+  const handleRemoveCategory = async (category) => {
+    try {
+      await axios.delete(`/business/${currentCompany.domain}/categories`, {
+        data: { category: category.id },
+      });
+      getCompanyCategories();
+    } catch (error) {}
+  };
+
+  const handleSetAsPrimary = async (category) => {
+    try {
+      await axios.patch(`/business/${currentCompany.domain}/categories`, {
+        category: category.id,
+      });
+      getCompanyCategories();
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    setFilteredCategories(
+      filter(categories, (category) => lowerCase(category.name).indexOf(lowerCase(search)) !== -1)
+    );
+  }, [search]);
+
+  useEffect(() => {
+    getCompanyCategories();
   }, [currentCompany]);
 
-  useEffect(async () => {
-    reRenderCategory();
-  }, [lsCategories]);
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   return (
     <BusinessLayout pageTitle="Categories">
-      {currentCompany !== null && (
-        <>
-          <div className="w-full max-w-6xl mx-auto">
-            <div className="bg-white">
-              <div className=" p-5">
-                <h3 className="font-semibold text-xl mb-4">Choose a category</h3>
-                <p className="text-gray-500">
-                  Stand out on Trustpilot and in search results by placing your company in the
-                  appropriate category. You can add your company in up to 6 categories (1 primary, 5
-                  secondary)
-                </p>
-                <div className="mt-4 flex">
-                  <Select
-                    className="flex-1"
-                    options={categories}
-                    isClearable
-                    onChange={(event) => setSelected(event.value)}
-                  />
-                  <button
-                    className={`${
-                      isLoading ? 'disabled' : ''
-                    } ml-2 py-2 px-5 bg-indigo-600 text-white rounded-md`}
-                    onClick={handleCreate}
+      <div className="w-full max-w-6xl mx-auto">
+        <div className="bg-white p-4 mb-4 border">
+          <h3 className="font-semibold text-lg mb-2">Choose a category</h3>
+          <p className="text-gray-500">
+            Stand out in search results by placing your company in the appropriate category.
+            <br />
+            You can add your company in up to 6 categories (1 primary, 5 secondary)
+          </p>
+          <div className="mt-4 flex flex-row space-x-4">
+            <div className="relative flex flex-row flex-grow border items-center">
+              <input
+                type="text"
+                className="py-2 px-4 flex-grow"
+                placeholder="Search categories"
+                value={search}
+                onChange={onSearchChange}
+                disabled={companyCategories.length >= 6}
+              />
+              {!isEmpty(search) && (
+                <button type="button" className="w-5 h-5 flex-none mx-2" onClick={onReset}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-x"
                   >
-                    +Add
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white mt-5">
-              <div className="p-5">
-                <h3 className="font-semibold text-xl mb-4 border-b pb-4">
-                  You've added your business to these categories:
-                </h3>
-                {!isLoadingList ? (
-                  <div>
-                    {lsCategories.map((category) => {
-                      return (
-                        <div
-                          key={category.id}
-                          className="flex items-center justify-between border-b py-3"
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              )}
+              {!isEmpty(search) && selectedCategory === null && filteredCategories.length > 0 && (
+                <div className="absolute w-full top-full left-0 bg-white shadow-sm border border-gray-100">
+                  <ul className="overflow-y-auto max-h-64">
+                    {filteredCategories.map((category) => (
+                      <li key={category.id}>
+                        <a
+                          className="px-6 py-2 block hover:bg-gray-50"
+                          role="button"
+                          aria-hidden="true"
+                          onClick={() => onSelect(category)}
                         >
-                          <div className="flex">
-                            <span className="">{category.name}</span>
-                            {category.company?.is_primary ? (
-                              <span className="ml-2 bg-indigo-500 px-1 rounded-sm text-xs text-white font-semibold flex items-center">
-                                Primary
-                              </span>
-                            ) : null}
-                          </div>
-                          <div className="flex space-x-2">
-                            {!category.company?.is_primary ? (
-                              <button
-                                onClick={() => setDefaultCategory(category.id)}
-                                className="py-1 px-5 text-sm hover:border-blue-500 border font-semibold hover:text-blue-500 rounded-sm"
-                              >
-                                Set as primary
-                              </button>
-                            ) : null}
-
-                            <button
-                              onClick={() => removeCategory(category.id)}
-                              className="py-1 px-5 text-sm border-red-500 border font-semibold text-red-500 rounded-sm"
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div className="flex justify-center items-center h-72">
-                    <Spinner />
-                  </div>
-                )}
-              </div>
+                          {category.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
+            <button
+              type="button"
+              className="py-2 px-6 bg-indigo-600 text-white flex-none"
+              disabled={selectedCategory === null}
+              onClick={handleAddCategory}
+            >
+              Add
+            </button>
           </div>
-        </>
-      )}
+        </div>
+        <div className="bg-white p-4 border">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-20">
+              <Spinner />
+            </div>
+          ) : (
+            <>
+              <h3 className="font-semibold text-lg mb-2 border-b pb-2">
+                You&apos;ve added your business to these categories:
+              </h3>
+              <div className="divide-y">
+                {companyCategories.map((row) => (
+                  <div
+                    key={row.category_id}
+                    className="flex flex-row items-center py-2 justify-between"
+                  >
+                    <div>
+                      <span className="mr-2">{row.category.name}</span>
+                      {row.is_primary === 1 && (
+                        <span className="inline-block bg-indigo-500 px-2 py-1 text-xs text-white uppercase">
+                          Primary
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex flex-row space-x-2">
+                      {row.is_primary !== 1 && (
+                        <>
+                          <button
+                            type="button"
+                            className="py-1 px-5 text-sm hover:border-blue-500 border font-semibold hover:text-blue-500"
+                            onClick={() => handleSetAsPrimary(row.category)}
+                          >
+                            Set as primary
+                          </button>
+                        </>
+                      )}
+                      <button
+                        type="button"
+                        className="py-1 px-5 text-sm border-red-500 border font-semibold text-red-500"
+                        onClick={() => handleRemoveCategory(row.category)}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </BusinessLayout>
   );
 };
