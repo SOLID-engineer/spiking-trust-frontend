@@ -5,6 +5,7 @@ import Spinner from 'components/common/Spinner';
 
 const Card = ({ uuid, onRemove }) => {
   const [data, setData] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -13,6 +14,8 @@ const Card = ({ uuid, onRemove }) => {
       try {
         const response = await axios.get(`/companies/${uuid}/info`);
         setData(response.data);
+        const categoriesResponse = await axios.get(`/companies/${uuid}/categories`);
+        setCategories(categoriesResponse.data);
       } catch (error) {}
       setIsLoading(false);
     };
@@ -20,7 +23,7 @@ const Card = ({ uuid, onRemove }) => {
   }, []);
 
   return (
-    <div className="bg-white p-4 w-72 border text-sm relative mr-4">
+    <div className="bg-white p-4 w-72 border text-sm relative mr-4 h-full">
       {isLoading && (
         <div className="flex justify-center items-center h-72">
           <Spinner />
@@ -156,6 +159,16 @@ const Card = ({ uuid, onRemove }) => {
               </div>
             </div>
           </div>
+          {categories.length > 0 && (
+            <div className="mt-4 border-t pt-2">
+              <div className="text-base mb-2">Categories</div>
+              <div className="space-y-2">
+                {categories.map((row) => (
+                  <a className="block text-gray-600">{row.category.name}</a>
+                ))}
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>
