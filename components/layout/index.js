@@ -32,9 +32,9 @@ export default function Layout({ children }) {
               </li>
               {session ? (
                 <li className="relative dropdown">
-                  <Link href="/settings">
-                    <a className="block h-16 items-center px-4">{session?.user?.first_name}</a>
-                  </Link>
+                  {/* <Link href="/settings"> */}
+                  {/* </Link> */}
+                  <a className="block h-16 items-center px-4">{session?.user?.first_name}</a>
                   <div className="dropdown-menu">
                     <ul>
                       <li>
