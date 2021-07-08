@@ -49,7 +49,7 @@ export default function AdminTemplateCreate() {
   });
 
   return (
-    <AdminLayout pageTitle="Create categories">
+    <AdminLayout pageTitle="Create mail template">
       <div className="md:w-2/3 mx-auto sm:px-6">
         <div className="bg-white px-4 md:px-10 pt-4 md:pt-7 pb-5 overflow-y-auto">
           <form onSubmit={formik.handleSubmit} className="md:flex flex-wrap -mx-3 mb-6">

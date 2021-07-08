@@ -63,7 +63,7 @@ export default function AdminReviewEdit({ review_id }) {
   }, []);
 
   return (
-    <AdminLayout pageTitle="Update Reviews">
+    <AdminLayout pageTitle="Update reviews">
       <div className="w-3/4 sm:px-6 mx-auto">
         <div className="bg-white shadow px-4 md:px-10 pt-4 md:pt-7 pb-5 overflow-y-auto rounded-md">
           {loading ? (

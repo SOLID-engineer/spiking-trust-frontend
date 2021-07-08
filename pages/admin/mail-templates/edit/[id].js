@@ -70,7 +70,7 @@ export default function AdminTemplateEdit({ template_id }) {
   }, []);
 
   return (
-    <AdminLayout pageTitle="Create categories">
+    <AdminLayout pageTitle="Update mail template">
       <div className="md:w-2/3 mx-auto sm:px-6">
         <div className="bg-white px-4 md:px-10 pt-4 md:pt-7 pb-5 overflow-y-auto">
           {loading ? (

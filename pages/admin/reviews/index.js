@@ -77,7 +77,7 @@ const ReviewAdmin = ({ query }) => {
   }, []);
 
   return (
-    <AdminLayout pageTitle="reviews">
+    <AdminLayout pageTitle="Reviews">
       <div className="w-full sm:px-6">
         <div className="p-4 bg-gray-100">
           <div className="sm:flex items-center justify-between">

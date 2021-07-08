@@ -71,7 +71,7 @@ const AdminUsers = ({ query }) => {
   }, []);
 
   return (
-    <AdminLayout pageTitle="users">
+    <AdminLayout pageTitle="Users">
       <div className="w-full sm:px-6">
         <div className="p-4 bg-gray-100">
           <div className="sm:flex items-center justify-between">
@@ -98,7 +98,7 @@ const AdminUsers = ({ query }) => {
                   <tr className="w-full text-xs leading-none uppercase font-bold">
                     <th className="p-5 text-left w-60">Name</th>
                     <th className="p-5 text-left w-96">Email</th>
-                    <th className="p-5 text-left">Date join</th>
+                    <th className="p-5 text-left w-60">Date join</th>
                     <th className="p-5 text-left w-96">Owner of</th>
                   </tr>
                 </thead>
