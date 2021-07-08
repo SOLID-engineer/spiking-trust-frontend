@@ -39,8 +39,8 @@ const Cateogires = ({ category, companies, slug }) => {
               </Link>
             )}
           </p>
-          <h2 className="font-bold text-3xl"> Best in Pet Stores</h2>
-          <p>Top-rated businesses in the Pet Stores category</p>
+          <h2 className="font-bold text-3xl"> Best in {category.parent?.name}</h2>
+          <p>Top-rated businesses in the {category.parent?.name} category</p>
         </div>
       </div>
       <div className="max-w-6xl mx-auto py-3 ">
@@ -91,7 +91,7 @@ const Cateogires = ({ category, companies, slug }) => {
           </aside>
           <div className="col-span-3">
             <div className="py-7 px-6">
-              <h3 className="font-semibold text-lg">Top-rated companies</h3>
+              <h3 className="font-semibold text-lg">All companies in this category</h3>
               <p className="text-sm mt-2">
                 <span className="font-semibold text-gray-400">
                   Showing 1-10 of {companies?.total} results
@@ -107,8 +107,8 @@ const Cateogires = ({ category, companies, slug }) => {
                             <div className="w-1/4 flex justify-center">
                               <img
                                 className="w-32"
-                                src="//s3-eu-west-1.amazonaws.com/tpd/logos/5c29129cd9f1f10001db3141/0x0.png"
-                                alt="Tweedle Farms"
+                                src={`${process.env.NEXT_PUBLIC_FILE_STORAGE_URL}/${company.profile_image}`}
+                                alt={company.name}
                               />
                             </div>
                             <div className="w-3/4">
