@@ -9,12 +9,14 @@ export const getServerSideProps = async (context) => {
   try {
     const response = await axios.get(`/categories`);
     props.categories = response.data;
+    props.categories_parent = response.data.filter((category) => parseInt(category.level) === 1);
   } catch (error) {}
   return { props };
 };
 
 const Categories = (props) => {
-  const { categories = {} } = props;
+  const { categories = [], categories_parent = [] } = props;
+
   return (
     <Layout>
       <div className="w-full bg-white">
@@ -29,7 +31,7 @@ const Categories = (props) => {
               <h3 className="text-lg font-semibold mb-6">View Category</h3>
               <div className="text-sm">
                 <ul>
-                  {categories.map((category) => {
+                  {categories_parent.map((category) => {
                     return (
                       <li
                         key={`ls-${category.id}`}
@@ -55,7 +57,7 @@ const Categories = (props) => {
           </aside>
           <section className="md:col-span-2 hidden md:block">
             <div className="bg-white py-7 px-6 text-sm">
-              {categories.map((category) => {
+              {categories_parent.map((category) => {
                 return (
                   <div
                     id={`${category.slug}`}
@@ -70,16 +72,18 @@ const Categories = (props) => {
                       </h3>
                     </div>
                     <div className="col-span-2 grid grid-cols-2 gap-4 border-b pb-10">
-                      {category?.children &&
-                        category.children.map((child) => {
+                      {categories &&
+                        categories.map((child) => {
                           return (
-                            <div key={child.id}>
-                              <Link href={`/categories/${child.slug}`}>
-                                <span className="hover:text-blue-700 cursor-pointer">
-                                  {child.name}
-                                </span>
-                              </Link>
-                            </div>
+                            child.parent_id === category.id && (
+                              <div key={child.id}>
+                                <Link href={`/categories/${child.slug}`}>
+                                  <span className="hover:text-blue-700 cursor-pointer">
+                                    {child.name}
+                                  </span>
+                                </Link>
+                              </div>
+                            )
                           );
                         })}
                     </div>

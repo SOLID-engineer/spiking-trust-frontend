@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Spinner from 'components/common/Spinner';
 
 import AdminLayout from 'components/admin';
 import Link from 'next/link';
@@ -24,10 +25,13 @@ export const getServerSideProps = async (context) => {
 
 const Business = () => {
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getCategories = async () => {
+    setLoading(true);
     const response = await axios.get('/admin/categories', {});
     const { data = [] } = response;
+    setLoading(false);
     setCategories(data);
   };
 
@@ -69,61 +73,67 @@ const Business = () => {
           </div>
         </div>
         <div className="bg-white shadow pt-4 md:pt-7 pb-5 overflow-y-auto">
-          <table className="w-full whitespace-nowrap">
-            <thead>
-              <tr className="w-full text-xs leading-none uppercase font-bold">
-                <th className="p-5 text-left">Name</th>
-                <th className="p-5 text-left w-28">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="w-full">
-              {categories.map((category) => {
-                return (
-                  <tr
-                    key={category.id}
-                    className="h-20 text-xs leading-none text-gray-800 bg-white border-b border-t border-gray-100"
-                  >
-                    <td className="cursor-pointer">
-                      <div className="flex items-center">
-                        <div className="pl-5">
-                          <p
-                            className={`font-medium pl-${
-                              category.level >= 3 ? '20' : category.level >= 2 ? '10' : ''
-                            }`}
-                          >
-                            {category.name}
-                          </p>
+          {loading ? (
+            <div className="flex justify-center items-center h-72">
+              <Spinner />
+            </div>
+          ) : (
+            <table className="w-full whitespace-nowrap">
+              <thead>
+                <tr className="w-full text-xs leading-none uppercase font-bold">
+                  <th className="p-5 text-left">Name</th>
+                  <th className="p-5 text-left w-28">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="w-full">
+                {categories.map((category) => {
+                  return (
+                    <tr
+                      key={category.id}
+                      className="h-7 text-xs leading-none text-gray-800 bg-white border-b border-t border-gray-100"
+                    >
+                      <td className="cursor-pointer">
+                        <div className="flex items-center">
+                          <div className="pl-5">
+                            <p
+                              className={`font-medium pl-${
+                                category.level >= 3 ? '20' : category.level >= 2 ? '10' : ''
+                              }`}
+                            >
+                              {category.name}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="flex pl-5">
-                        <Link href={`/admin/categories/edit/${category.id}`}>
-                          <p
+                      </td>
+                      <td>
+                        <div className="flex pl-5">
+                          <Link href={`/admin/categories/edit/${category.id}`}>
+                            <p
+                              className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6 cursor-pointer"
+                              title="Edit details"
+                            >
+                              <span className="text-xs">
+                                <EditIcon />
+                              </span>
+                            </p>
+                          </Link>
+                          <button
                             className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6 cursor-pointer"
-                            title="Edit details"
+                            title="Detele details"
+                            onClick={() => removeRecord(category.id)}
                           >
-                            <span className="text-xs">
-                              <EditIcon />
+                            <span className="text-xs text-red-400">
+                              <TrashIcon />
                             </span>
-                          </p>
-                        </Link>
-                        <button
-                          className="btn btn-sm btn-clean btn-icon mr-2 h-6 w-6 cursor-pointer"
-                          title="Detele details"
-                          onClick={() => removeRecord(category.id)}
-                        >
-                          <span className="text-xs text-red-400">
-                            <TrashIcon />
-                          </span>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </AdminLayout>

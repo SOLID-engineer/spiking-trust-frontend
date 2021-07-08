@@ -3,7 +3,6 @@ import axios from 'axios';
 
 import Link from 'next/link';
 import Layout from '../../components/layout';
-import { wrapper } from '../../slices/store';
 import StarRating from '../../components/common/StarRating';
 
 export const getServerSideProps = async (context) => {
