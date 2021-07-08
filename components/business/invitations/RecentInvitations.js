@@ -5,6 +5,14 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import Link from 'next/link';
+import {
+  INVITATION_STATUSES,
+  INVITATION_STATUS_CANCELLED,
+  INVITATION_STATUS_DELIVERED,
+  INVITATION_STATUS_NOT_DELIVERED,
+  INVITATION_STATUS_QUEUED,
+  INVITATION_TYPES,
+} from 'constants/invitation';
 
 const relativeTime = require('dayjs/plugin/relativeTime');
 
@@ -36,7 +44,7 @@ const RecentInvitations = () => {
           <a className="text-blue-600">See full invitation history</a>
         </Link>
       </div>
-      <div className="bg-white border p-4">
+      <div className="bg-white border p-4 overflow-x-auto">
         {isLoading ? (
           <div className="flex justify-center items-center h-24">
             <Spinner />
@@ -60,24 +68,37 @@ const RecentInvitations = () => {
                     data.items.map((row) => (
                       <tr key={row.id}>
                         <td className="px-6 py-3 text-left border-t">{row.email}</td>
-                        <td className="px-6 py-3 text-left border-t">{row.status}</td>
+                        <td className="px-6 py-3 text-left border-t">
+                          <div className="flex flex-row items-center space-x-2">
+                            {row.status === INVITATION_STATUS_NOT_DELIVERED && (
+                              <div className="w-3 h-3 bg-red-600 rounded-full flex-none"></div>
+                            )}
+                            {row.status === INVITATION_STATUS_CANCELLED && (
+                              <div className="w-3 h-3 bg-gray-200 rounded-full flex-none"></div>
+                            )}
+                            {row.status === INVITATION_STATUS_DELIVERED && (
+                              <div className="w-3 h-3 bg-green-600 rounded-full flex-none"></div>
+                            )}
+                            {row.status === INVITATION_STATUS_QUEUED && (
+                              <div className="w-3 h-3 bg-yellow-300 rounded-full flex-none"></div>
+                            )}
+                            <span>{INVITATION_STATUSES[row.status]}</span>
+                          </div>
+                        </td>
                         <td className="px-6 py-3 text-left border-t">
                           {dayjs().to(dayjs(row.created_at))}
                         </td>
                         <td className="px-6 py-3 text-left border-t">
                           {row.sent_at === null ? '-' : dayjs().to(dayjs(row.sent_at))}
                         </td>
-                        <td className="px-6 py-3 text-left border-t">{row.type}</td>
+                        <td className="px-6 py-3 text-left border-t">
+                          {INVITATION_TYPES[row.type]}
+                        </td>
                         <td className="px-6 py-3 text-left border-t">{row.reference_number}</td>
                       </tr>
                     ))}
                 </tbody>
               </table>
-            </div>
-            <div className="p-2 text-center">
-              <Link href="/business/invitations/invitation-history">
-                <a className="text-blue-600">See full invitation history</a>
-              </Link>
             </div>
           </>
         )}

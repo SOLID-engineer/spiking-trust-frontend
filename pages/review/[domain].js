@@ -309,7 +309,7 @@ const Review = ({ company, data }) => {
                       <div className="flex flex-row items-center justify-between mb-4">
                         <StarRating value={review.rating} size="md" />
                         <span className="text-gray-400">
-                          {dayjs().to(dayjs(review.updated_at))}
+                          {dayjs().to(dayjs(review.created_at))}
                         </span>
                       </div>
                       <div className="mb-2 font-semibold text-lg">{review.title}</div>
@@ -322,7 +322,7 @@ const Review = ({ company, data }) => {
                             Reply from {company.name || company.domain}
                           </span>
                           <span className="text-gray-400">
-                            {dayjs().to(dayjs(review.reply.updated_at))}
+                            {dayjs().to(dayjs(review.reply.created_at))}
                           </span>
                         </div>
                         <div>{review.reply.content}</div>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import AdminLayout from 'components/admin';
-import { TEMPLATE_TYPE } from 'contants/template';
+import { TEMPLATE_TYPE } from 'constants/template';
 import { useFormik } from 'formik';
 import { getSession } from 'next-auth/client';
 import router from 'next/router';

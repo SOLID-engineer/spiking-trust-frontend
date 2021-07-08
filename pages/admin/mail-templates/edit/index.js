@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import AdminLayout from 'components/admin';
-import { TEMPLATE_TYPE } from 'contants/template';
+import { TEMPLATE_TYPE } from 'constants/template';
 import { useFormik } from 'formik';
 import axios from 'axios';
 import router from 'next/router';
