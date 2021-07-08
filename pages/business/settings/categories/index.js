@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import Select from 'react-select';
 import axios from 'axios';
 import Spinner from 'components/common/Spinner';
 
@@ -26,10 +25,12 @@ const CategoryBusiness = () => {
   };
 
   const getCompanyCategories = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(`/companies/${currentCompany.uuid}/categories`);
       setCompanyCategories(response.data);
     } catch (error) {}
+    setIsLoading(false);
   };
 
   const onReset = () => {
@@ -158,46 +159,54 @@ const CategoryBusiness = () => {
           </div>
         </div>
         <div className="bg-white p-4 border">
-          <h3 className="font-semibold text-lg mb-2 border-b pb-2">
-            You&apos;ve added your business to these categories:
-          </h3>
-          <div className="divide-y">
-            {companyCategories.map((row) => (
-              <div
-                key={row.category_id}
-                className="flex flex-row items-center py-2 justify-between"
-              >
-                <div>
-                  <span className="mr-2">{row.category.name}</span>
-                  {row.is_primary === 1 && (
-                    <span className="inline-block bg-indigo-500 px-2 py-1 text-xs text-white uppercase">
-                      Primary
-                    </span>
-                  )}
-                </div>
-                <div className="flex flex-row space-x-2">
-                  {row.is_primary !== 1 && (
-                    <>
+          {isLoading ? (
+            <div className="flex justify-center items-center h-20">
+              <Spinner />
+            </div>
+          ) : (
+            <>
+              <h3 className="font-semibold text-lg mb-2 border-b pb-2">
+                You&apos;ve added your business to these categories:
+              </h3>
+              <div className="divide-y">
+                {companyCategories.map((row) => (
+                  <div
+                    key={row.category_id}
+                    className="flex flex-row items-center py-2 justify-between"
+                  >
+                    <div>
+                      <span className="mr-2">{row.category.name}</span>
+                      {row.is_primary === 1 && (
+                        <span className="inline-block bg-indigo-500 px-2 py-1 text-xs text-white uppercase">
+                          Primary
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex flex-row space-x-2">
+                      {row.is_primary !== 1 && (
+                        <>
+                          <button
+                            type="button"
+                            className="py-1 px-5 text-sm hover:border-blue-500 border font-semibold hover:text-blue-500"
+                            onClick={() => handleSetAsPrimary(row.category)}
+                          >
+                            Set as primary
+                          </button>
+                        </>
+                      )}
                       <button
                         type="button"
-                        className="py-1 px-5 text-sm hover:border-blue-500 border font-semibold hover:text-blue-500"
-                        onClick={() => handleSetAsPrimary(row.category)}
+                        className="py-1 px-5 text-sm border-red-500 border font-semibold text-red-500"
+                        onClick={() => handleRemoveCategory(row.category)}
                       >
-                        Set as primary
+                        Remove
                       </button>
-                    </>
-                  )}
-                  <button
-                    type="button"
-                    className="py-1 px-5 text-sm border-red-500 border font-semibold text-red-500"
-                    onClick={() => handleRemoveCategory(row.category)}
-                  >
-                    Remove
-                  </button>
-                </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          )}
         </div>
       </div>
     </BusinessLayout>
